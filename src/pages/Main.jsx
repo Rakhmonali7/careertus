@@ -1,5 +1,7 @@
 import { useState } from 'react';
-
+import Jobs from '../components/Jobs';
+import Events from '../components/Events';
+import dot from '../assets/dot.svg';
 function Main() {
   const [active, setActive] = useState('jobs');
   const handleMain = state => {
@@ -9,17 +11,21 @@ function Main() {
   return (
     <>
       <div className="mt-6 p-7 border-1 rounded-3xl">
-        <div className="flex justify-around">
+        <div className="flex justify-around ">
           <h2
             onClick={() => {
               handleMain('jobs');
             }}
-            className={`cursor-pointer flex items-center space-x-2 ${
-              active === 'jobs' ? 'text-black' : 'text-gray-300'
+            className={`cursor-pointer flex items-center space-x-2 relative ${
+              active === 'jobs' ? 'text-black underline' : 'text-gray-300'
             }`}
           >
             {active === 'jobs' && (
-              <span className="before:content-['•'] text-black"></span>
+              <img
+                src={dot}
+                alt="black dot"
+                className="absolute left-[-25px]"
+              />
             )}
             Jobs
           </h2>
@@ -27,16 +33,23 @@ function Main() {
             onClick={() => {
               handleMain('events');
             }}
-            className={`cursor-pointer flex items-center space-x-2 ${
-              active === 'events' ? 'text-black' : 'text-gray-300'
+            className={`cursor-pointer flex items-center space-x-2 relative ${
+              active === 'events' ? 'text-black underline' : 'text-gray-300'
             }`}
           >
             {active === 'events' && (
-              <span className="before:content-['•'] text-black"></span>
+              <img
+                src={dot}
+                alt="black dot"
+                className="absolute left-[-25px]"
+              />
             )}
             Events
           </h2>
         </div>
+
+        {active === 'jobs' && <Jobs />}
+        {active === 'events' && <Events />}
       </div>
     </>
   );
