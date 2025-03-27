@@ -1,19 +1,26 @@
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/reg-logo.svg';
 import profileIcon from '../assets/profile-icon.svg';
 import search from '../assets/search-icon.svg';
 import Button from '../components/Button';
 
 function Nav() {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    console.log('Registration button clicked');
+
+    navigate('/register');
+  };
   return (
     <>
-      <div>
-        <div className="flex justify-between ">
+      <div className="pt-12 px-50">
+        <div className="flex justify-between">
           <div>
             <img alt="Company logo" src={logo} className="h-7 w-auto" />
           </div>
           <div>
-            <div className="flex justify-between gap-5">
-              <Button name="Log in" />
+            <div className="flex justify-between items-center gap-5">
+              <Button name="Log in" onClick={handleLogin} />
               <img
                 className="h-6 w-auto"
                 src={profileIcon}

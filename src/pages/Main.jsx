@@ -10,46 +10,48 @@ function Main() {
 
   return (
     <>
-      <div className="mt-6 p-7 border-1 rounded-3xl">
-        <div className="flex justify-around ">
-          <h2
-            onClick={() => {
-              handleMain('jobs');
-            }}
-            className={`cursor-pointer flex items-center space-x-2 relative ${
-              active === 'jobs' ? 'text-black underline' : 'text-gray-300'
-            }`}
-          >
-            {active === 'jobs' && (
-              <img
-                src={dot}
-                alt="black dot"
-                className="absolute left-[-25px]"
-              />
-            )}
-            Jobs
-          </h2>
-          <h2
-            onClick={() => {
-              handleMain('events');
-            }}
-            className={`cursor-pointer flex items-center space-x-2 relative ${
-              active === 'events' ? 'text-black underline' : 'text-gray-300'
-            }`}
-          >
-            {active === 'events' && (
-              <img
-                src={dot}
-                alt="black dot"
-                className="absolute left-[-25px]"
-              />
-            )}
-            Events
-          </h2>
-        </div>
+      <div className="px-50">
+        <div className="mt-6 p-7 border-1 rounded-3xl">
+          <div className="flex justify-around ">
+            <h2
+              onClick={() => {
+                handleMain('jobs');
+              }}
+              className={`cursor-pointer flex items-center space-x-2 relative ${
+                active === 'jobs' ? 'text-black underline' : 'text-gray-300'
+              }`}
+            >
+              {active === 'jobs' && (
+                <img
+                  src={dot}
+                  alt="black dot"
+                  className="absolute left-[-25px]"
+                />
+              )}
+              Jobs
+            </h2>
+            <h2
+              onClick={() => {
+                handleMain('events');
+              }}
+              className={`cursor-pointer flex items-center space-x-2 relative ${
+                active === 'events' ? 'text-black underline' : 'text-gray-300'
+              }`}
+            >
+              {active === 'events' && (
+                <img
+                  src={dot}
+                  alt="black dot"
+                  className="absolute left-[-25px]"
+                />
+              )}
+              Events
+            </h2>
+          </div>
 
-        {active === 'jobs' && <Jobs />}
-        {active === 'events' && <Events />}
+          {active === 'jobs' && <Jobs />}
+          {active === 'events' && <Events />}
+        </div>
       </div>
     </>
   );

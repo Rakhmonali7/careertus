@@ -1,12 +1,13 @@
-function Button(props) {
+function Button({ name, onClick }) {
   return (
-    <button
-      className="middle none center rounded-full border border-black-500 py-1 px-3 font-sans text-xs transition-all hover:bg-gray-800 hover:text-amber-50 focus:ring focus:ring-grey-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      data-ripple-dark="true"
-    >
-      {props.name}
-    </button>
+    <>
+      <button
+        onClick={onClick}
+        className="border h-8 flex items-center justify-center border-gray-900 text-gray-900 px-4 py-2 rounded-full transition duration-300 hover:bg-gray-900 hover:text-white cursor-pointer"
+      >
+        {name}
+      </button>
+    </>
   );
 }
-
 export default Button;

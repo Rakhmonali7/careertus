@@ -1,18 +1,12 @@
-import { useState } from 'react';
-import Register from './pages/Register';
-import Nav from './pages/Nav';
-import Main from './pages/Main';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './pages/Layout';
 function App() {
   return (
-    <>
-      <div className="pt-12 px-50">
-        <Nav />
-        <Main />
+    <Router>
+      <div>
+        <Layout /> {/* Wrap everything inside Layout */}
       </div>
-
-      {/* <Register /> */}
-    </>
+    </Router>
   );
 }
 
