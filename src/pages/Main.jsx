@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Jobs from '../components/Jobs';
 import Events from '../components/Events';
 import dot from '../assets/dot.svg';
+import Nav from './Nav';
 function Main() {
   const [active, setActive] = useState('jobs');
   const handleMain = state => {
@@ -10,6 +11,7 @@ function Main() {
 
   return (
     <>
+      <Nav />
       <div className="px-50">
         <div className="mt-6 p-7 border-1 rounded-3xl">
           <div className="flex justify-around ">

@@ -61,7 +61,7 @@ function Register() {
                 autoComplete="current-password"
                 className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
               />
-              <div className="flex items-center justify-between mt-2">
+              <div className="flex justify-end mt-2">
                 <a
                   href="#"
                   className="text-sm text-gray-500 hover:text-gray-700"
@@ -84,7 +84,7 @@ function Register() {
           <p className="mt-6 text-center text-sm text-gray-500">
             Not a member?{' '}
             <a
-              href="#"
+              href="/signup"
               className="font-semibold text-gray-600 hover:text-gray-800"
             >
               Sign up
