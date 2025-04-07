@@ -1,11 +1,30 @@
-import { useState } from 'react';
-import logo from '../assets/reg-logo.svg';
+import { useState } from "react";
+import logo from "../assets/reg-logo.svg";
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_URL = "https://sqcjbblyhcobumfrfgik.supabase.co";
+const ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxY2piYmx5aGNvYnVtZnJmZ2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNTk5MjEsImV4cCI6MjA1NjczNTkyMX0.d3leK2Llh0_8aLAXudgZGpYN2ZTbxLLbdjizkP9zVqw";
+
+const supabase = createClient(SUPABASE_URL, ANON_KEY);
 
 function Register() {
-  const [tag, setTag] = useState('applicant');
-  const handleUser = user => {
+  const [tag, setTag] = useState("applicant");
+  const handleUser = (user) => {
     setTag(user);
   };
+
+  async function signUpNewUser() {
+    const { data, error } = await supabase.auth.signUp({
+      email: "salokhiddinov0727@gmail.com",
+      password: "newPassword7788",
+      options: {
+        emailRedirectTo: "https://example.com/welcome",
+      },
+    });
+
+    console.log({ data, error });
+  }
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -17,21 +36,21 @@ function Register() {
         <div className="flex justify-between mt-6 sm:mt-10 mb-6 sm:mb-8 border-b-2">
           <h2
             className={`text-lg sm:text-xl cursor-pointer pb-2 ${
-              tag === 'applicant'
+              tag === "applicant"
                 ? "before:content-['•'] before:mr-2 before:text-black"
-                : 'font-light'
+                : "font-light"
             }`}
-            onClick={() => handleUser('applicant')}
+            onClick={() => handleUser("applicant")}
           >
             Applicant
           </h2>
           <h2
             className={`text-lg sm:text-xl cursor-pointer pb-2 ${
-              tag === 'company'
+              tag === "company"
                 ? "before:content-['•'] before:mr-2 before:text-black"
-                : 'font-light'
+                : "font-light"
             }`}
-            onClick={() => handleUser('company')}
+            onClick={() => handleUser("company")}
           >
             Company
           </h2>
@@ -73,6 +92,7 @@ function Register() {
 
             <div>
               <button
+                onClick={signUpNewUser}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D]"
               >
@@ -82,7 +102,7 @@ function Register() {
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-500">
-            Not a member?{' '}
+            Not a member?{" "}
             <a
               href="/signup"
               className="font-semibold text-gray-600 hover:text-gray-800"
