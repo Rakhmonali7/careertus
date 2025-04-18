@@ -3,6 +3,7 @@ import Jobs from '../components/Jobs';
 import Events from '../components/Events';
 import dot from '../assets/dot.svg';
 import Nav from './Nav';
+import Job from '../components/JobDetails';
 function Main() {
   const [active, setActive] = useState('jobs');
   const handleMain = state => {
