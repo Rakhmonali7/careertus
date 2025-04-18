@@ -1,4 +1,4 @@
-function Button({ name, onClick }) {
+function Button({ name, onClick, border }) {
   return (
     <>
       <button
