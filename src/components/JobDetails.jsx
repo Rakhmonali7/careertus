@@ -7,7 +7,7 @@ function JobDetails({ job, onBack }) {
     <div className="p-8 space-y-4 bg-white rounded-lg shadow-md">
       <button
         onClick={onBack}
-        className="text-blue-500 hover:underline text-sm mb-4"
+        className="text-blue-600 hover:underline text-sm mb-4"
       >
         ← Back to Jobs
       </button>
@@ -63,7 +63,7 @@ function JobDetails({ job, onBack }) {
         <span className="block mt-4 text-sm text-gray-600">{job.message}</span>
       )}
 
-      <button className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+      <button className="mt-6 px-4 py-2 bg-gray-950 text-white rounded hover:bg-gray-600 transition">
         Apply
       </button>
     </div>
