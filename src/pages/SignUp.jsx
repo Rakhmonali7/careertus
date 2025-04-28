@@ -1,8 +1,6 @@
-import logo from '../assets/reg-logo.svg';
-import dot from '../assets/dot.svg';
-import Input from '../components/Input';
 import { createClient } from '@supabase/supabase-js';
 import Button from '../components/Button';
+import Template from '../components/Template';
 
 const supabase = createClient(
   'https://sqcjbblyhcobumfrfgik.supabase.co',
@@ -23,21 +21,7 @@ function SignUp() {
   }
   return (
     <>
-      <div className="flex min-h-screen w-full items-center justify-center px-4">
-        <div className="w-full max-w-lg sm:max-w-md md:max-w-lg flex flex-col justify-center border rounded-2xl p-2 sm:p-4 md:p-10 bg-white shadow-lg">
-          <div className="flex items-center gap-5">
-            <img src={dot} alt="dot" className="w-4" />
-            <img src={logo} alt="logo" className="h-6" />
-          </div>
-          <span className="block text-[#bcbcbc] mt-2 mb-15 font-medium">
-            Sign up
-          </span>
-          <div className="flex ">
-            <Input placeholder={'Enter your email'} />
-            <Button onClick={signUpNewUser} name={'Send'} />
-          </div>
-        </div>
-      </div>
+      <Template></Template>
     </>
   );
 }
