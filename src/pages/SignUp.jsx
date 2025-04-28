@@ -40,9 +40,9 @@ function SignUp() {
       //   emailRedirectTo: 'https://example.com/welcome',
       // },
     });
-    // if (!error) {
-    // const response = await api.post(endpoints.REGISTER_ROLE);
-    //}
+    if (!error) {
+      const response = await api.post(endpoints.REGISTER_ROLE, { phone, name });
+    }
     console.log({ data, error });
   }
   useEffect(() => {
