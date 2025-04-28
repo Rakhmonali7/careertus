@@ -16,6 +16,8 @@ function Template({ color }) {
           </div>
 
           <Input placeholder="Email" />
+          <Input placeholder="Enter password" />
+          <Input placeholder="Comfirm password" />
           <Button
             className="self-end"
             size="large"
