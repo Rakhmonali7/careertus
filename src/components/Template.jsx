@@ -1,8 +1,16 @@
-import logo from '../assets/reg-logo.svg';
-import dot from '../assets/dot.svg';
-import Input from '../components/Input';
-import { Button, ConfigProvider, Flex } from 'antd';
-function Template({ color }) {
+import logo from "../assets/reg-logo.svg";
+import dot from "../assets/dot.svg";
+import Input from "../components/Input";
+import { Button, ConfigProvider, Flex } from "antd";
+function Template({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  confirmPw,
+  setConfirmPw,
+  fCall,
+}) {
   return (
     <>
       <div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -15,12 +23,33 @@ function Template({ color }) {
             <h3 className="text-gray-300 font-medium text-xl mt-3">Sign up</h3>
           </div>
 
-          <Input placeholder="Email" />
+          <Input
+            placeholder="Email"
+            type="email"
+            name="email"
+            input={email}
+            setInput={setEmail}
+          />
+          <Input
+            placeholder="Password"
+            type="password"
+            name="password"
+            input={password}
+            setInput={setPassword}
+          />
+          <Input
+            placeholder="Confirm password"
+            type="password"
+            name="password"
+            input={confirmPw}
+            setInput={setConfirmPw}
+          />
           <Button
             className="self-end"
             size="large"
             color="default"
             variant="solid"
+            onClick={fCall}
           >
             Enter
           </Button>
