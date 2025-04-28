@@ -10,20 +10,26 @@ const supabase = createClient(
 );
 
 const App = () => {
-  const [session, setSession] = useState(null);
+  const [_, setSession] = useState(null);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      console.log({ session });
+      if (session) {
+        const { access_token } = session;
+        localStorage.setItem("token", access_token);
+      }
     });
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      console.log({ session });
+      if (session) {
+        const { access_token } = session;
+        localStorage.setItem("token", access_token);
+      }
     });
-    if (session) {
-      const { access_token } = session;
-      localStorage.setToken(access_token);
-    }
     return () => subscription.unsubscribe();
   }, []);
   return (
