@@ -14,13 +14,14 @@ function Register() {
     setTag(user);
   };
 
-  async function signUpNewUser() {
-    const { data, error } = await supabase.auth.signUp({
-      email: "salokhiddinov0727@gmail.com",
+  async function signUpNewUser(event) {
+    event.preventDefault();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: "sam7ech.libervance@gmail.com",
       password: "newPassword7788",
-      options: {
-        emailRedirectTo: "https://example.com/welcome",
-      },
+      // options: {
+      //   emailRedirectTo: "https://example.com/welcome",
+      // },
     });
 
     console.log({ data, error });
@@ -92,7 +93,7 @@ function Register() {
 
             <div>
               <button
-                onClick={signUpNewUser}
+                onClick={(e) => signUpNewUser(e)}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D]"
               >
