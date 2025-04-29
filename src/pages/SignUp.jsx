@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import Button from "../components/Button";
 import Template from "../components/Template";
-import { useState, useEffect } from "react";
+import Input from "../components/Input";
+import { Button, ConfigProvider, Flex } from 'antd';
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
-
+console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+console.log("Anon Key:", import.meta.env.VITE_SUPABASE_ANON_KEY);
+// Use environment variables in production!
 const supabase = createClient(
-  "https://sqcjbblyhcobumfrfgik.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxY2piYmx5aGNvYnVtZnJmZ2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNTk5MjEsImV4cCI6MjA1NjczNTkyMX0.d3leK2Llh0_8aLAXudgZGpYN2ZTbxLLbdjizkP9zVqw"
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
 function SignUp() {
@@ -16,53 +19,70 @@ function SignUp() {
   const [confirmPw, setConfirmPw] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
-  async function signUpNewUser() {
-    if (password !== confirmPw) {
-      setAlertMessage("Passwords do not match!");
-      console.log("Passwords do not match!");
+  const validate = () => {
+    if (!email) return "Please input email!";
+    if (!password) return "Please input password!";
+    if (password !== confirmPw) return "Passwords do not match!";
+    return null;
+  };
+
+  const signUpNewUser = async (e) => {
+    e.preventDefault();
+    const errorMsg = validate();
+    if (errorMsg) {
+      setAlertMessage(errorMsg);
       return;
     }
-    console.log({ email });
-    if (email === "") {
-      setAlertMessage("Please input email!");
-      console.log("Please input email!");
-      return;
+
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+
+      // Optional: example of API call
+      // await api.post(endpoints.REGISTER_ROLE, { phone, name });
+
+      setAlertMessage("Registration successful! Please check your email.");
+    } catch (err) {
+      setAlertMessage(err.message || "Something went wrong.");
     }
-    if (password === "") {
-      setAlertMessage("Please input password!");
-      console.log("Please input password!");
-      return;
-    }
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      // options: {
-      //   emailRedirectTo: 'https://example.com/welcome',
-      // },
-    });
-    if (!error) {
-      const response = await api.post(endpoints.REGISTER_ROLE, { phone, name });
-    }
-    console.log({ data, error });
-  }
-  useEffect(() => {
-    if (password !== confirmPw) {
-      setAlertMessage("Passwords do not match!");
-    } else {
-      setAlertMessage("");
-    }
-  }, [confirmPw, password]);
+  };
 
   return (
     <Template
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
-      confirmPw={confirmPw}
-      setConfirmPw={setConfirmPw}
-      fCall={signUpNewUser}
-    />
+      title="Create Account"
+      onSubmit={signUpNewUser}
+      footer={
+        <Button htmlType="submit" size="large" color="default" variant="solid">
+          Enter
+        </Button>
+      }
+    >
+      {alertMessage && (
+        <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+      )}
+      <Input
+        placeholder="Email"
+        type="email"
+        name="email"
+        value={email}
+        onChange={setEmail}
+      />
+      <Input
+        placeholder="Password"
+        type="password"
+        name="password"
+        value={password}
+        onChange={setPassword}
+      />
+      <Input
+        placeholder="Confirm password"
+        type="password"
+        name="confirmPw"
+        value={confirmPw}
+        onChange={setConfirmPw}
+      />
+    </Template>
   );
 }
+
 export default SignUp;
