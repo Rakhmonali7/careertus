@@ -3,6 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   registerRole: "",
   templateStatus: 0,
+  signUpData: {
+    email: "",
+    password: "",
+    confirmPw: "",
+    nationality: "",
+    gender: "",
+    location: "",
+    birthday: "",
+  },
 };
 
 const globalSlice = createSlice({
@@ -15,8 +24,21 @@ const globalSlice = createSlice({
     setTemplateStatus: (state, action) => {
       state.templateStatus = action.payload;
     },
+    setSignUpData: (state, action) => {
+      const { key, value } = action.payload;
+      state.signUpData[key] = value;
+    },
+    resetSignUpData: (state) => {
+      state.signUpData = initialState.signUpData;
+      state.templateStatus = 0;
+    },
   },
 });
 
-export const { setUserRole, setTemplateStatus } = globalSlice.actions;
+export const {
+  setUserRole,
+  setTemplateStatus,
+  setSignUpData,
+  resetSignUpData,
+} = globalSlice.actions;
 export default globalSlice.reducer;
