@@ -53,7 +53,7 @@ function SignUp() {
       }
       // const { data, error } = await supabase.auth.signUp({ email, password });
       // if (error) throw error;
-      dispatch(setTemplateStatus(templateStatusEnum.ONE));
+      dispatch(setTemplateStatus(templateStatusEnum.TWO));
 
       // Optional: example of API call
       // await api.post(endpoints.REGISTER_ROLE, { phone, name });
@@ -125,25 +125,11 @@ function SignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Email"
-          type="email"
-          name="email"
+          placeholder="Nationality"
+          type="text"
+          name="nationality"
           value={email}
           onChange={setEmail}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={setPassword}
-        />
-        <Input
-          placeholder="Confirm password"
-          type="password"
-          name="confirmPw"
-          value={confirmPw}
-          onChange={setConfirmPw}
         />
       </Template>
     ),
@@ -166,25 +152,11 @@ function SignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Email"
-          type="email"
-          name="email"
+          placeholder="Birthday"
+          type="text"
+          name="birthday"
           value={email}
           onChange={setEmail}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={setPassword}
-        />
-        <Input
-          placeholder="Confirm password"
-          type="password"
-          name="confirmPw"
-          value={confirmPw}
-          onChange={setConfirmPw}
         />
       </Template>
     ),
@@ -207,25 +179,11 @@ function SignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Email"
-          type="email"
-          name="email"
+          placeholder="Gender"
+          type="text"
+          name="gender"
           value={email}
           onChange={setEmail}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={setPassword}
-        />
-        <Input
-          placeholder="Confirm password"
-          type="password"
-          name="confirmPw"
-          value={confirmPw}
-          onChange={setConfirmPw}
         />
       </Template>
     ),
@@ -248,57 +206,36 @@ function SignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Email"
-          type="email"
-          name="email"
+          placeholder="Area of residence"
+          type="text"
+          name="location"
           value={email}
           onChange={setEmail}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={setPassword}
-        />
-        <Input
-          placeholder="Confirm password"
-          type="password"
-          name="confirmPw"
-          value={confirmPw}
-          onChange={setConfirmPw}
         />
       </Template>
     ),
   };
 
-  let content = templates.emailAndPwRegister();
+  useEffect(() => {
+    dispatch(setTemplateStatus(templateStatusEnum.ONE));
+  }, []);
 
-  function checkTemplateStatusAndSet() {
+  return (() => {
     switch (templateStatus) {
       case templateStatusEnum.ONE:
-        content = templates.emailAndPwRegister();
-        break;
+        return templates.emailAndPwRegister();
       case templateStatusEnum.TWO:
-        content = templates.nationalityRegister();
-        break;
+        return templates.nationalityRegister();
       case templateStatusEnum.THREE:
-        content = templates.bdRegister();
-        break;
+        return templates.bdRegister();
       case templateStatusEnum.FOUR:
-        content = templates.genderRegister();
-        break;
+        return templates.genderRegister();
       case templateStatusEnum.FIVE:
-        content = templates.locationRegister();
-        break;
+        return templates.locationRegister();
+      default:
+        return templates.emailAndPwRegister();
     }
-  }
-
-  useEffect(() => {
-    checkTemplateStatusAndSet();
-  }, [templateStatus]);
-
-  return content;
+  })();
 }
 
 export default SignUp;
