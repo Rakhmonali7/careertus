@@ -12,11 +12,12 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.0.9",
-    "antd": "^5.24.2",
+    "antd": "^5.24.9",
     "axios": "^1.9.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.4.0",
+    "world_countries_lists": "^2.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

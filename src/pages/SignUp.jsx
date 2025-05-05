@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Template from "../components/Template";
 import Input from "../components/Input";
-import { Button, ConfigProvider, Flex } from 'antd';
+import { Button, ConfigProvider } from 'antd';
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
 console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);

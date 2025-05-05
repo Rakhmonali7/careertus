@@ -5,6 +5,8 @@ import search from '../assets/search-icon.svg';
 import Button from '../components/Button';
 
 function Nav() {
+
+ 
   const navigate = useNavigate();
   const handleLogin = () => {
     console.log('Registration button clicked');
@@ -12,7 +14,7 @@ function Nav() {
     navigate('/register');
   };
   return (
-    <>
+    
       <div className="pt-12 px-50">
         <div className="flex justify-between">
           <div>
@@ -42,7 +44,7 @@ function Nav() {
           />
         </div>
       </div>
-    </>
+    
   );
 }
 
