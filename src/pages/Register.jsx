@@ -2,23 +2,24 @@ import { useState } from "react";
 import logo from "../assets/reg-logo.svg";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "https://sqcjbblyhcobumfrfgik.supabase.co";
-const ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxY2piYmx5aGNvYnVtZnJmZ2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNTk5MjEsImV4cCI6MjA1NjczNTkyMX0.d3leK2Llh0_8aLAXudgZGpYN2ZTbxLLbdjizkP9zVqw";
-
-const supabase = createClient(SUPABASE_URL, ANON_KEY);
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [tag, setTag] = useState("applicant");
   const handleUser = (user) => {
     setTag(user);
   };
 
-  async function signUpNewUser(event) {
+  async function signIn(event) {
     event.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: "sam7ech.libervance@gmail.com",
-      password: "newPassword7788",
+      email,
+      password,
       // options: {
       //   emailRedirectTo: "https://example.com/welcome",
       // },
@@ -66,6 +67,7 @@ function Register() {
                 type="email"
                 placeholder="Email"
                 required
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
               />
@@ -78,6 +80,7 @@ function Register() {
                 type="password"
                 placeholder="Password"
                 required
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
               />
@@ -93,7 +96,7 @@ function Register() {
 
             <div>
               <button
-                onClick={(e) => signUpNewUser(e)}
+                onClick={(e) => signIn(e)}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D]"
               >
