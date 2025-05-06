@@ -11,7 +11,7 @@ const initialState = {
     nationality: "",
     gender: "",
     location: "",
-    birthday: "",
+    birthdate: "",
     phone: null,
     name: "",
     language: "",

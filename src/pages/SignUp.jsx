@@ -49,7 +49,7 @@ function SignUp() {
     nationality,
     gender,
     location,
-    birthday,
+    birthdate,
     phone,
     name,
     language,
@@ -80,7 +80,13 @@ function SignUp() {
         setAlertMessage(errorMsg);
         return;
       }
-      const { data, error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: "http://localhost:5173",
+        },
+      });
       console.log({ data });
       if (error) throw error;
       console.log({ status });
@@ -99,22 +105,26 @@ function SignUp() {
   const handleRegisterRole = async (e) => {
     e.preventDefault();
     try {
-      console.log({
-        email,
-        password,
-        confirmPw,
-        nationality,
-        gender,
-        location,
-        birthday,
-      });
       for (let [key, value] of Object.entries(signUpData)) {
         if (value === "" || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
         }
       }
-      // const response = await api.post(endpoints.REGISTER_ROLE, { phone });
+      const data = {
+        type: registerRole,
+        account_id: accountId,
+        name,
+        phone,
+        birthdate,
+        language,
+        country: nationality,
+        education,
+      };
+      const response = await api.post(endpoints.REGISTER_ROLE, data);
+      console.log({ response });
+      dispatch(resetSignUpData());
+      dispatch(setTemplateStatus(templateStatusEnum.ONE));
       // navigate("/");
     } catch (err) {
       console.log(err.message);
@@ -328,7 +338,7 @@ function SignUp() {
     ),
     bdRegister: () => (
       <Template
-        title="Enter your birthday"
+        title="Enter your birthdate"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
         footer={
           <Button
@@ -347,9 +357,9 @@ function SignUp() {
         <Input
           placeholder="Birthday"
           type="text"
-          name="birthday"
-          value={birthday}
-          onChange={handleChange("birthday")}
+          name="birthdate"
+          value={birthdate}
+          onChange={handleChange("birthdate")}
         />
       </Template>
     ),
@@ -419,12 +429,22 @@ function SignUp() {
       case templateStatusEnum.ONE:
         return templates.emailAndPwRegister();
       case templateStatusEnum.TWO:
-        return templates.nationalityRegister();
+        return templates.accountIdRegister();
       case templateStatusEnum.THREE:
-        return templates.bdRegister();
+        return templates.nameRegister();
       case templateStatusEnum.FOUR:
-        return templates.genderRegister();
+        return templates.phoneRegister();
       case templateStatusEnum.FIVE:
+        return templates.languageRegister();
+      case templateStatusEnum.SIX:
+        return templates.educationRegister();
+      case templateStatusEnum.SEVEN:
+        return templates.nationalityRegister();
+      case templateStatusEnum.EIGHT:
+        return templates.bdRegister();
+      case templateStatusEnum.NINE:
+        return templates.genderRegister();
+      case templateStatusEnum.TEN:
         return templates.locationRegister();
       default:
         return templates.emailAndPwRegister();
