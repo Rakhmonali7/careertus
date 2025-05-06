@@ -4,6 +4,7 @@ import Nav from './Nav';
 import Main from './Main';
 import SignUp from './SignUp';
 import Applicant from './Applicant';
+import AccauntSetting from './AccauntSetting';
 
 function Layout() {
   const location = useLocation(); // Get the current path
@@ -16,6 +17,7 @@ function Layout() {
           <Route path="/register" element={<Register />} />
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/applicant" element={<Applicant/>} />
+          <Route path="/accauntSetting" element={<AccauntSetting/>} />
         </Routes>
       </div>
     
