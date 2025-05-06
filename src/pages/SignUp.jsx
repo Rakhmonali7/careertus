@@ -8,8 +8,11 @@ import { endpoints } from "../configs/endpoints";
 import {
   setUserRole,
   setTemplateStatus,
+  setSignUpData,
+  resetSignUpData,
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Use environment variables in production!
 const supabase = createClient(
@@ -26,15 +29,28 @@ const templateStatusEnum = {
 };
 
 function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPw, setConfirmPw] = useState("");
+  const navigate = useNavigate();
+
   const [alertMessage, setAlertMessage] = useState("");
 
   const dispatch = useDispatch();
   const templateStatus = useSelector(
     (state) => state.globalState.templateStatus
   );
+  const {
+    email,
+    password,
+    confirmPw,
+    nationality,
+    gender,
+    location,
+    birthday,
+  } = useSelector((state) => state.globalState.signUpData);
+
+  // hof
+  const handleChange = (key) => (value) => {
+    dispatch(setSignUpData({ key, value }));
+  };
 
   const validate = () => {
     if (!email) return "Please input email!";
@@ -43,7 +59,7 @@ function SignUp() {
     return null;
   };
 
-  const signUpNewUser = async (e) => {
+  const supabaseSignUp = async (e, status) => {
     e.preventDefault();
     try {
       const errorMsg = validate();
@@ -52,14 +68,38 @@ function SignUp() {
         return;
       }
       // const { data, error } = await supabase.auth.signUp({ email, password });
+      // console.log({ data });
       // if (error) throw error;
-      dispatch(setTemplateStatus(templateStatusEnum.TWO));
-
-      // Optional: example of API call
-      // await api.post(endpoints.REGISTER_ROLE, { phone, name });
-
-      setAlertMessage("Registration successful! Please check your email.");
+      console.log({ status });
+      dispatch(setTemplateStatus(status));
     } catch (err) {
+      console.log(err.message);
+      setAlertMessage(err.message || "Something went wrong.");
+    }
+  };
+  // await api.post(endpoints.REGISTER_ROLE, { phone, name });
+
+  const handleForwardTemplate = (e, status) => {
+    e.preventDefault();
+    dispatch(setTemplateStatus(status));
+  };
+
+  const handleRegisterRole = async (e) => {
+    e.preventDefault();
+    try {
+      // const response = await api.post(endpoints.REGISTER_ROLE, { phone });
+      // navigate("/");
+      console.log({
+        email,
+        password,
+        confirmPw,
+        nationality,
+        gender,
+        location,
+        birthday,
+      });
+    } catch (err) {
+      console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");
     }
   };
@@ -68,7 +108,7 @@ function SignUp() {
     emailAndPwRegister: () => (
       <Template
         title="Create Account"
-        onSubmit={signUpNewUser}
+        onSubmit={(e) => supabaseSignUp(e, templateStatusEnum.TWO)}
         footer={
           <Button
             htmlType="submit"
@@ -88,28 +128,28 @@ function SignUp() {
           type="email"
           name="email"
           value={email}
-          onChange={setEmail}
+          onChange={handleChange("email")}
         />
         <Input
           placeholder="Password"
           type="password"
           name="password"
           value={password}
-          onChange={setPassword}
+          onChange={handleChange("password")}
         />
         <Input
           placeholder="Confirm password"
           type="password"
           name="confirmPw"
           value={confirmPw}
-          onChange={setConfirmPw}
+          onChange={handleChange("confirmPw")}
         />
       </Template>
     ),
     nationalityRegister: () => (
       <Template
         title="Create Account"
-        onSubmit={signUpNewUser}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
         footer={
           <Button
             htmlType="submit"
@@ -128,15 +168,15 @@ function SignUp() {
           placeholder="Nationality"
           type="text"
           name="nationality"
-          value={email}
-          onChange={setEmail}
+          value={nationality}
+          onChange={handleChange("nationality")}
         />
       </Template>
     ),
     bdRegister: () => (
       <Template
         title="Create Account"
-        onSubmit={signUpNewUser}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
           <Button
             htmlType="submit"
@@ -155,15 +195,15 @@ function SignUp() {
           placeholder="Birthday"
           type="text"
           name="birthday"
-          value={email}
-          onChange={setEmail}
+          value={birthday}
+          onChange={handleChange("birthday")}
         />
       </Template>
     ),
     genderRegister: () => (
       <Template
         title="Create Account"
-        onSubmit={signUpNewUser}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
           <Button
             htmlType="submit"
@@ -182,15 +222,15 @@ function SignUp() {
           placeholder="Gender"
           type="text"
           name="gender"
-          value={email}
-          onChange={setEmail}
+          value={gender}
+          onChange={handleChange("gender")}
         />
       </Template>
     ),
     locationRegister: () => (
       <Template
         title="Create Account"
-        onSubmit={signUpNewUser}
+        onSubmit={handleRegisterRole}
         footer={
           <Button
             htmlType="submit"
@@ -209,8 +249,8 @@ function SignUp() {
           placeholder="Area of residence"
           type="text"
           name="location"
-          value={email}
-          onChange={setEmail}
+          value={location}
+          onChange={handleChange("location")}
         />
       </Template>
     ),
@@ -218,6 +258,7 @@ function SignUp() {
 
   useEffect(() => {
     dispatch(setTemplateStatus(templateStatusEnum.ONE));
+    dispatch(resetSignUpData());
   }, []);
 
   return (() => {
