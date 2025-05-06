@@ -26,6 +26,11 @@ const templateStatusEnum = {
   THREE: 2,
   FOUR: 3,
   FIVE: 4,
+  SIX: 5,
+  SEVEN: 6,
+  EIGHT: 7,
+  NINE: 8,
+  TEN: 9,
 };
 
 function SignUp() {
@@ -45,7 +50,15 @@ function SignUp() {
     gender,
     location,
     birthday,
+    phone,
+    name,
+    language,
+    education,
+    accountId,
   } = useSelector((state) => state.globalState.signUpData);
+  const { signUpData, registerRole } = useSelector(
+    (state) => state.globalState
+  );
 
   // hof
   const handleChange = (key) => (value) => {
@@ -67,9 +80,9 @@ function SignUp() {
         setAlertMessage(errorMsg);
         return;
       }
-      // const { data, error } = await supabase.auth.signUp({ email, password });
-      // console.log({ data });
-      // if (error) throw error;
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      console.log({ data });
+      if (error) throw error;
       console.log({ status });
       dispatch(setTemplateStatus(status));
     } catch (err) {
@@ -77,7 +90,6 @@ function SignUp() {
       setAlertMessage(err.message || "Something went wrong.");
     }
   };
-  // await api.post(endpoints.REGISTER_ROLE, { phone, name });
 
   const handleForwardTemplate = (e, status) => {
     e.preventDefault();
@@ -87,8 +99,6 @@ function SignUp() {
   const handleRegisterRole = async (e) => {
     e.preventDefault();
     try {
-      // const response = await api.post(endpoints.REGISTER_ROLE, { phone });
-      // navigate("/");
       console.log({
         email,
         password,
@@ -98,6 +108,14 @@ function SignUp() {
         location,
         birthday,
       });
+      for (let [key, value] of Object.entries(signUpData)) {
+        if (value === "" || value === null) {
+          setAlertMessage(`${key} is missing!`);
+          return;
+        }
+      }
+      // const response = await api.post(endpoints.REGISTER_ROLE, { phone });
+      // navigate("/");
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");
@@ -107,7 +125,7 @@ function SignUp() {
   const templates = {
     emailAndPwRegister: () => (
       <Template
-        title="Create Account"
+        title={`Create account as ${registerRole}`}
         onSubmit={(e) => supabaseSignUp(e, templateStatusEnum.TWO)}
         footer={
           <Button
@@ -146,10 +164,145 @@ function SignUp() {
         />
       </Template>
     ),
+    accountIdRegister: () => (
+      <Template
+        title="Enter a new account id"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
+        footer={
+          <Button
+            htmlType="submit"
+            size="large"
+            color="default"
+            variant="solid"
+          >
+            Continue
+          </Button>
+        }
+      >
+        {alertMessage && (
+          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+        )}
+        <Input
+          placeholder="Account Id"
+          type="text"
+          name="accountId"
+          value={accountId}
+          onChange={handleChange("accountId")}
+        />
+      </Template>
+    ),
+    nameRegister: () => (
+      <Template
+        title="Enter your fullname"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
+        footer={
+          <Button
+            htmlType="submit"
+            size="large"
+            color="default"
+            variant="solid"
+          >
+            Continue
+          </Button>
+        }
+      >
+        {alertMessage && (
+          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+        )}
+        <Input
+          placeholder="Full Name"
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange("name")}
+        />
+      </Template>
+    ),
+    phoneRegister: () => (
+      <Template
+        title="Enter your phone number"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
+        footer={
+          <Button
+            htmlType="submit"
+            size="large"
+            color="default"
+            variant="solid"
+          >
+            Continue
+          </Button>
+        }
+      >
+        {alertMessage && (
+          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+        )}
+        <Input
+          placeholder="Phone number"
+          type="number"
+          name="phone"
+          value={phone}
+          onChange={handleChange("phone")}
+        />
+      </Template>
+    ),
+    languageRegister: () => (
+      <Template
+        title="Enter your preferred language"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
+        footer={
+          <Button
+            htmlType="submit"
+            size="large"
+            color="default"
+            variant="solid"
+          >
+            Continue
+          </Button>
+        }
+      >
+        {alertMessage && (
+          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+        )}
+        <Input
+          placeholder="language"
+          type="text"
+          name="language"
+          value={language}
+          onChange={handleChange("language")}
+        />
+      </Template>
+    ),
+    educationRegister: () => (
+      <Template
+        title="Enter your education"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
+        footer={
+          <Button
+            htmlType="submit"
+            size="large"
+            color="default"
+            variant="solid"
+          >
+            Continue
+          </Button>
+        }
+      >
+        {alertMessage && (
+          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+        )}
+        <Input
+          placeholder="Education"
+          type="text"
+          name="education"
+          value={education}
+          onChange={handleChange("education")}
+        />
+      </Template>
+    ),
     nationalityRegister: () => (
       <Template
-        title="Create Account"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
+        title="Enter your nationality"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.EIGHT)}
         footer={
           <Button
             htmlType="submit"
@@ -175,8 +328,8 @@ function SignUp() {
     ),
     bdRegister: () => (
       <Template
-        title="Create Account"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
+        title="Enter your birthday"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
         footer={
           <Button
             htmlType="submit"
@@ -202,8 +355,8 @@ function SignUp() {
     ),
     genderRegister: () => (
       <Template
-        title="Create Account"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
+        title="Select your gender"
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TEN)}
         footer={
           <Button
             htmlType="submit"
@@ -229,7 +382,7 @@ function SignUp() {
     ),
     locationRegister: () => (
       <Template
-        title="Create Account"
+        title="Enter your area of residence"
         onSubmit={handleRegisterRole}
         footer={
           <Button
