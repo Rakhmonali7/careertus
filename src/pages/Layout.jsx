@@ -7,7 +7,7 @@ import Applicant from './Applicant';
 import AccountSetting from './AccountSetting';
 import CompanyJobPost from './CompanyJobPost';
 import JobFinalEdit from '../components/JobFinalEdit';
-
+import AdminPage from './AdminPage';
 function Layout() {
   const location = useLocation(); // Get the current path
 
@@ -21,6 +21,7 @@ function Layout() {
         <Route path="/accountSetting" element={<AccountSetting />} />
         <Route path="/companyJobPost" element={<CompanyJobPost />} />
         <Route path="/jobFinalEdit" element={<JobFinalEdit />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>
   );
