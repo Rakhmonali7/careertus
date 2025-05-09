@@ -1,8 +1,8 @@
 export const endpoints = {
-  REGISTER_ROLE: "/register-role",
-  RESUME_UPLOAD: "/resume-upload",
-  RESUME_URL: "/resume-url",
-  JOB_POST: "/job-post",
-  JOB_UPDATE: "/job_update",
-  JOBS: "/jobs",
+  REGISTER_ROLE: "/api/register-role",
+  RESUME_UPLOAD: "/api/resume-upload",
+  RESUME_URL: "/api/resume-url",
+  JOB_POST: "/api/job-post",
+  JOB_UPDATE: "/api/job_update",
+  JOBS: "/api/jobs",
 };

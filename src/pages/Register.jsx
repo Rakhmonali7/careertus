@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/reg-logo.svg";
 import { createClient } from "@supabase/supabase-js";
+import { useDispatch } from "react-redux";
+import { setUserRole } from "../store/reducers/globalReducer";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -11,7 +13,11 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [tag, setTag] = useState("applicant");
+
+  const dispatch = useDispatch();
+
   const handleUser = (user) => {
+    dispatch(setUserRole(user));
     setTag(user);
   };
 
@@ -27,6 +33,10 @@ function Register() {
 
     console.log({ data, error });
   }
+
+  useEffect(() => {
+    dispatch(setUserRole(tag));
+  }, []);
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -108,7 +118,7 @@ function Register() {
           <p className="mt-6 text-center text-sm text-gray-500">
             Not a member?{" "}
             <a
-              href="/signup"
+              href="/supabase-signup"
               className="font-semibold text-gray-600 hover:text-gray-800"
             >
               Sign up

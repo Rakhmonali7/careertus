@@ -4,13 +4,18 @@ const initialState = {
   registerRole: "",
   templateStatus: 0,
   signUpData: {
+    accountId: "",
     email: "",
     password: "",
     confirmPw: "",
     nationality: "",
     gender: "",
     location: "",
-    birthday: "",
+    birthdate: "",
+    phone: null,
+    name: "",
+    language: "",
+    education: "",
   },
 };
 
