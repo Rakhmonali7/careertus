@@ -1,7 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import Register from "./Register";
 import Main from "./Main";
-import Applicant from "./Applicant";
 import AccauntSetting from "./AccauntSetting";
 
 import ApplicantSignUp from "./ApplicantSignUp";
@@ -15,7 +14,6 @@ function Layout() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/applicant" element={<Applicant />} />
         <Route path="/accauntSetting" element={<AccauntSetting />} />
         <Route path="/supabase-signup" element={<SupabaseSignUp />}></Route>
         <Route
