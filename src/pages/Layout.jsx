@@ -21,8 +21,6 @@ function Layout() {
           path="/register-role/applicant"
           element={<ApplicantSignUp />}
         ></Route>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/applicant" element={<Applicant />} />
         <Route path="/accountSetting" element={<AccountSetting />} />
         <Route path="/companyJobPost" element={<CompanyJobPost />} />
         <Route path="/jobFinalEdit" element={<JobFinalEdit />} />

@@ -1,10 +1,10 @@
-import logo from '../assets/reg-logo.svg';
-import dot from '../assets/dot.svg';
-import redDot from '../assets/redDot.svg';
-import redLogo from '../assets/redLogo.svg';
+import logo from "../assets/reg-logo.svg";
+import dot from "../assets/dot.svg";
+import redDot from "../assets/redDot.svg";
+import redLogo from "../assets/redLogo.svg";
 
-function Template({ title = 'Sign up', children, onSubmit, footer, theme }) {
-  if (theme === 'red') {
+function Template({ title = "Sign up", children, onSubmit, footer, theme }) {
+  if (theme === "red") {
     return (
       <div className="flex min-h-screen w-full items-center justify-center px-4">
         <form
@@ -29,7 +29,7 @@ function Template({ title = 'Sign up', children, onSubmit, footer, theme }) {
     <div className="flex min-h-screen w-full items-center justify-center px-4">
       <form
         onSubmit={onSubmit}
-        className="w-full min-w-2xl flex flex-col justify-between border rounded-2xl p-6 sm:p-8 bg-white shadow-lg min-h-[60vh]"
+        className="min-w-2xl flex flex-col justify-between border rounded-2xl p-6 sm:p-8 bg-white shadow-lg min-h-[60vh]"
       >
         <div>
           <div className="flex gap-4">
