@@ -2,10 +2,17 @@ import Template from '../components/Template';
 import Step1JobCreate from '../components/Step1JobCreate';
 import Step2JobCreate from '../components/Step2JobCreate';
 import Step3JobCreate from '../components/Step3JobCreate';
+import Step4JobCreate from '../components/Step4JobCreate';
+
 import { Button } from 'antd';
 import { useState } from 'react';
 
-const stepComponents = [Step1JobCreate, Step2JobCreate, Step3JobCreate];
+const stepComponents = [
+  Step1JobCreate,
+  Step2JobCreate,
+  Step3JobCreate,
+  Step4JobCreate,
+];
 
 function CompanyJobPost() {
   const [step, setStep] = useState(0);
