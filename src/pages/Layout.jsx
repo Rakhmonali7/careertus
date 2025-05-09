@@ -1,8 +1,9 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Register from './Register';
-import Nav from './Nav';
-import Main from './Main';
-import SignUp from './SignUp';
+import { Routes, Route, useLocation } from "react-router-dom";
+import Register from "./Register";
+import Nav from "./Nav";
+import Main from "./Main";
+import ApplicantSignUp from "./ApplicantSignUp";
+import SupabaseSignUp from "./SupabaseSignUp";
 
 function Layout() {
   const location = useLocation(); // Get the current path
@@ -13,7 +14,11 @@ function Layout() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/supabase-signup" element={<SupabaseSignUp />}></Route>
+          <Route
+            path="/register-role/applicant"
+            element={<ApplicantSignUp />}
+          ></Route>
         </Routes>
       </div>
     </>

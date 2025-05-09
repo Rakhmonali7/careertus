@@ -1,24 +1,16 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import Template from "../components/Template";
 import Input from "../components/Input";
 import { Button, ConfigProvider, Flex } from "antd";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
 import {
-  setUserRole,
   setTemplateStatus,
   setSignUpData,
   resetSignUpData,
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-// Use environment variables in production!
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
 
 const templateStatusEnum = {
   ONE: 0,
@@ -30,10 +22,9 @@ const templateStatusEnum = {
   SEVEN: 6,
   EIGHT: 7,
   NINE: 8,
-  TEN: 9,
 };
 
-function SignUp() {
+function ApplicantSignUp() {
   const navigate = useNavigate();
 
   const [alertMessage, setAlertMessage] = useState("");
@@ -43,9 +34,6 @@ function SignUp() {
     (state) => state.globalState.templateStatus
   );
   const {
-    email,
-    password,
-    confirmPw,
     nationality,
     gender,
     location,
@@ -63,38 +51,6 @@ function SignUp() {
   // hof
   const handleChange = (key) => (value) => {
     dispatch(setSignUpData({ key, value }));
-  };
-
-  const validate = () => {
-    if (!email) return "Please input email!";
-    if (!password) return "Please input password!";
-    if (password !== confirmPw) return "Passwords do not match!";
-    return null;
-  };
-
-  const supabaseSignUp = async (e, status) => {
-    e.preventDefault();
-    try {
-      const errorMsg = validate();
-      if (errorMsg) {
-        setAlertMessage(errorMsg);
-        return;
-      }
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: "http://localhost:5173",
-        },
-      });
-      console.log({ data });
-      if (error) throw error;
-      console.log({ status });
-      dispatch(setTemplateStatus(status));
-    } catch (err) {
-      console.log(err.message);
-      setAlertMessage(err.message || "Something went wrong.");
-    }
   };
 
   const handleForwardTemplate = (e, status) => {
@@ -133,51 +89,10 @@ function SignUp() {
   };
 
   const templates = {
-    emailAndPwRegister: () => (
-      <Template
-        title={`Create account as ${registerRole}`}
-        onSubmit={(e) => supabaseSignUp(e, templateStatusEnum.TWO)}
-        footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
-            Continue
-          </Button>
-        }
-      >
-        {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
-        )}
-        <Input
-          placeholder="Email"
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleChange("email")}
-        />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={handleChange("password")}
-        />
-        <Input
-          placeholder="Confirm password"
-          type="password"
-          name="confirmPw"
-          value={confirmPw}
-          onChange={handleChange("confirmPw")}
-        />
-      </Template>
-    ),
     accountIdRegister: () => (
       <Template
         title="Enter a new account id"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TWO)}
         footer={
           <Button
             htmlType="submit"
@@ -204,7 +119,7 @@ function SignUp() {
     nameRegister: () => (
       <Template
         title="Enter your fullname"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
         footer={
           <Button
             htmlType="submit"
@@ -231,7 +146,7 @@ function SignUp() {
     phoneRegister: () => (
       <Template
         title="Enter your phone number"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
           <Button
             htmlType="submit"
@@ -258,7 +173,7 @@ function SignUp() {
     languageRegister: () => (
       <Template
         title="Enter your preferred language"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
           <Button
             htmlType="submit"
@@ -285,7 +200,7 @@ function SignUp() {
     educationRegister: () => (
       <Template
         title="Enter your education"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
         footer={
           <Button
             htmlType="submit"
@@ -312,7 +227,7 @@ function SignUp() {
     nationalityRegister: () => (
       <Template
         title="Enter your nationality"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.EIGHT)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
         footer={
           <Button
             htmlType="submit"
@@ -339,7 +254,7 @@ function SignUp() {
     bdRegister: () => (
       <Template
         title="Enter your birthdate"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.EIGHT)}
         footer={
           <Button
             htmlType="submit"
@@ -366,7 +281,7 @@ function SignUp() {
     genderRegister: () => (
       <Template
         title="Select your gender"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TEN)}
+        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
         footer={
           <Button
             htmlType="submit"
@@ -427,24 +342,22 @@ function SignUp() {
   return (() => {
     switch (templateStatus) {
       case templateStatusEnum.ONE:
-        return templates.emailAndPwRegister();
-      case templateStatusEnum.TWO:
         return templates.accountIdRegister();
-      case templateStatusEnum.THREE:
+      case templateStatusEnum.TWO:
         return templates.nameRegister();
-      case templateStatusEnum.FOUR:
+      case templateStatusEnum.THREE:
         return templates.phoneRegister();
-      case templateStatusEnum.FIVE:
+      case templateStatusEnum.FOUR:
         return templates.languageRegister();
-      case templateStatusEnum.SIX:
+      case templateStatusEnum.FIVE:
         return templates.educationRegister();
-      case templateStatusEnum.SEVEN:
+      case templateStatusEnum.SIX:
         return templates.nationalityRegister();
-      case templateStatusEnum.EIGHT:
+      case templateStatusEnum.SEVEN:
         return templates.bdRegister();
-      case templateStatusEnum.NINE:
+      case templateStatusEnum.EIGHT:
         return templates.genderRegister();
-      case templateStatusEnum.TEN:
+      case templateStatusEnum.NINE:
         return templates.locationRegister();
       default:
         return templates.emailAndPwRegister();
@@ -452,4 +365,4 @@ function SignUp() {
   })();
 }
 
-export default SignUp;
+export default ApplicantSignUp;
