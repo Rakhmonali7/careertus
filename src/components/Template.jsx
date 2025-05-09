@@ -1,7 +1,30 @@
-import logo from "../assets/reg-logo.svg";
-import dot from "../assets/dot.svg";
+import logo from '../assets/reg-logo.svg';
+import dot from '../assets/dot.svg';
+import redDot from '../assets/redDot.svg';
+import redLogo from '../assets/redLogo.svg';
 
-function Template({ title = "Sign up", children, onSubmit, footer }) {
+function Template({ title = 'Sign up', children, onSubmit, footer, theme }) {
+  if (theme === 'red') {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center px-4">
+        <form
+          onSubmit={onSubmit}
+          className="w-full h-auto max-w-lg sm:max-w-md md:max-w-lg flex flex-col justify-between border border-[#ff4d4f] rounded-2xl p-4 sm:p-6 md:p-10 bg-white shadow-lg md:min-h-[60vh]"
+        >
+          <div>
+            <div className="flex gap-4">
+              <img src={redDot} alt="dot" />
+              <img src={redLogo} alt="logo" className="max-w-[220px]" />
+            </div>
+            <h3 className="text-gray-300 font-medium text-xl mt-3">{title}</h3>
+          </div>
+          <div className="flex flex-col gap-6 mt-6">{children}</div>
+
+          {footer && <div className="mt-4 self-end">{footer}</div>}
+        </form>
+      </div>
+    );
+  }
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4">
       <form
@@ -15,13 +38,9 @@ function Template({ title = "Sign up", children, onSubmit, footer }) {
           </div>
           <h3 className="text-gray-300 font-medium text-xl mt-3">{title}</h3>
         </div>
-        <div className="flex flex-col gap-6 mt-6">
-          {children}
-        </div>
- 
+        <div className="flex flex-col gap-6 mt-6">{children}</div>
+
         {footer && <div className="mt-4 self-end">{footer}</div>}
-      
-        
       </form>
     </div>
   );

@@ -1,8 +1,8 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import Register from "./Register";
 import Main from "./Main";
-import AccauntSetting from "./AccauntSetting";
-
+import AccountSetting from "./AccountSetting";
+import CompanyJobPost from "./CompanyJobPost";
 import ApplicantSignUp from "./ApplicantSignUp";
 import SupabaseSignUp from "./SupabaseSignUp";
 
@@ -14,12 +14,15 @@ function Layout() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/accauntSetting" element={<AccauntSetting />} />
         <Route path="/supabase-signup" element={<SupabaseSignUp />}></Route>
         <Route
           path="/register-role/applicant"
           element={<ApplicantSignUp />}
         ></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/applicant" element={<Applicant />} />
+        <Route path="/accountSetting" element={<AccountSetting />} />
+        <Route path="/companyJobPost" element={<CompanyJobPost />} />
       </Routes>
     </div>
   );
