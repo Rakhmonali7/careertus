@@ -3,6 +3,10 @@ import logo from "../assets/reg-logo.svg";
 import { createClient } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
 import { setUserRole } from "../store/reducers/globalReducer";
+import { useNavigate } from "react-router-dom";
+import api from "../configs/config";
+import { endpoints } from "../configs/endpoints";
+import { setSignInData } from "../store/reducers/globalReducer";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -16,6 +20,8 @@ function Register() {
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const handleUser = (user) => {
     dispatch(setUserRole(user));
     setTag(user);
@@ -23,15 +29,42 @@ function Register() {
 
   async function signIn(event) {
     event.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      // options: {
-      //   emailRedirectTo: "https://example.com/welcome",
-      // },
     });
-
-    console.log({ data, error });
+    if (error) {
+      alert(error.message);
+      console.log(error.message);
+      return;
+    }
+    const {
+      data: {
+        user: {
+          birthdate,
+          country,
+          education,
+          language,
+          users: { account_id, email, name, phone, type },
+        },
+      },
+    } = await api.post(endpoints.USER_SIGN_IN);
+    dispatch(
+      setSignInData({
+        account_id,
+        email,
+        nationality,
+        gender,
+        location: country,
+        birthdate,
+        phone,
+        name,
+        language,
+        education,
+        type,
+      })
+    );
+    navigate("/");
   }
 
   useEffect(() => {
@@ -108,7 +141,7 @@ function Register() {
               <button
                 onClick={(e) => signIn(e)}
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D]"
+                className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D] cursor-pointer"
               >
                 Sign in
               </button>

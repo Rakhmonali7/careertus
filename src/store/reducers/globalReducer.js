@@ -17,12 +17,29 @@ const initialState = {
     language: "",
     education: "",
   },
+  signInData: {
+    accountId: "",
+    email: "",
+    nationality: "",
+    gender: "",
+    location: "",
+    birthdate: "",
+    phone: null,
+    name: "",
+    language: "",
+    education: "",
+    type: "",
+  },
 };
 
 const globalSlice = createSlice({
   name: "globalState",
   initialState,
   reducers: {
+    setSignInData: (state, action) => {
+      const { key, value } = action.payload;
+      state.signInData[key] = value;
+    },
     setUserRole: (state, action) => {
       state.registerRole = action.payload;
     },
@@ -44,6 +61,7 @@ export const {
   setUserRole,
   setTemplateStatus,
   setSignUpData,
+  setSignInData,
   resetSignUpData,
 } = globalSlice.actions;
 export default globalSlice.reducer;
