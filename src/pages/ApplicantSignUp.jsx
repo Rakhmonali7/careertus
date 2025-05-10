@@ -38,11 +38,13 @@ function ApplicantSignUp() {
   const { phone, name, accountId } = useSelector(
     (state) => state.globalState.shared
   );
-  const { applicant, registerRole } = useSelector((state) => state.globalState);
+  const { shared, applicant, registerRole } = useSelector(
+    (state) => state.globalState
+  );
 
   // hof
-  const handleChange = (key) => (value) => {
-    dispatch(setAuthData({ user: registerRole, key, value }));
+  const handleChange = (user, key) => (value) => {
+    dispatch(setAuthData({ user, key, value }));
   };
 
   const handleForwardTemplate = (e, status) => {
@@ -54,7 +56,12 @@ function ApplicantSignUp() {
     e.preventDefault();
     try {
       for (let [key, value] of Object.entries(shared)) {
-        if (key === "email" || key === "password" || key === "confirmPw")
+        if (
+          key === "email" ||
+          key === "password" ||
+          key === "confirmPw" ||
+          key === "type"
+        )
           continue;
         if (value === "" || value === null) {
           setAlertMessage(`${key} is missing!`);
@@ -67,6 +74,10 @@ function ApplicantSignUp() {
           return;
         }
       }
+      if (registerRole === "" || registerRole === null) {
+        setAlertMessage(`User role is missing!`);
+        return;
+      }
       const data = {
         type: registerRole,
         account_id: accountId,
@@ -78,6 +89,7 @@ function ApplicantSignUp() {
         education,
       };
       await api.post(endpoints.REGISTER_ROLE, data);
+      dispatch(resetAuthData({ user: "shared" }));
       dispatch(resetAuthData({ user: registerRole }));
       dispatch(setTemplateStatus(templateStatusEnum.ONE));
       navigate("/");
@@ -110,8 +122,8 @@ function ApplicantSignUp() {
           placeholder="Account Id"
           type="text"
           name="accountId"
-          value={accountId}
-          onChange={handleChange("accountId")}
+          value={accountId || ""}
+          onChange={handleChange("shared", "accountId")}
         />
       </Template>
     ),
@@ -137,8 +149,8 @@ function ApplicantSignUp() {
           placeholder="Full Name"
           type="text"
           name="name"
-          value={name}
-          onChange={handleChange("name")}
+          value={name || ""}
+          onChange={handleChange("shared", "name")}
         />
       </Template>
     ),
@@ -164,8 +176,8 @@ function ApplicantSignUp() {
           placeholder="Phone number"
           type="number"
           name="phone"
-          value={phone}
-          onChange={handleChange("phone")}
+          value={phone || ""}
+          onChange={handleChange("shared", "phone")}
         />
       </Template>
     ),
@@ -191,8 +203,8 @@ function ApplicantSignUp() {
           placeholder="language"
           type="text"
           name="language"
-          value={language}
-          onChange={handleChange("language")}
+          value={language || ""}
+          onChange={handleChange("applicant", "language")}
         />
       </Template>
     ),
@@ -218,8 +230,8 @@ function ApplicantSignUp() {
           placeholder="Education"
           type="text"
           name="education"
-          value={education}
-          onChange={handleChange("education")}
+          value={education || ""}
+          onChange={handleChange(registerRole, "education")}
         />
       </Template>
     ),
@@ -245,8 +257,8 @@ function ApplicantSignUp() {
           placeholder="Nationality"
           type="text"
           name="nationality"
-          value={nationality}
-          onChange={handleChange("nationality")}
+          value={nationality || ""}
+          onChange={handleChange(registerRole, "nationality")}
         />
       </Template>
     ),
@@ -272,8 +284,8 @@ function ApplicantSignUp() {
           placeholder="Birthday"
           type="text"
           name="birthdate"
-          value={birthdate}
-          onChange={handleChange("birthdate")}
+          value={birthdate || ""}
+          onChange={handleChange(registerRole, "birthdate")}
         />
       </Template>
     ),
@@ -299,8 +311,8 @@ function ApplicantSignUp() {
           placeholder="Gender"
           type="text"
           name="gender"
-          value={gender}
-          onChange={handleChange("gender")}
+          value={gender || ""}
+          onChange={handleChange(registerRole, "gender")}
         />
       </Template>
     ),
@@ -326,8 +338,8 @@ function ApplicantSignUp() {
           placeholder="Area of residence"
           type="text"
           name="location"
-          value={location}
-          onChange={handleChange("location")}
+          value={location || ""}
+          onChange={handleChange(registerRole, "location")}
         />
       </Template>
     ),
@@ -335,6 +347,7 @@ function ApplicantSignUp() {
 
   useEffect(() => {
     dispatch(setTemplateStatus(templateStatusEnum.ONE));
+    dispatch(resetAuthData({ user: "shared" }));
     dispatch(resetAuthData({ user: registerRole }));
   }, []);
 
@@ -359,7 +372,7 @@ function ApplicantSignUp() {
       case templateStatusEnum.NINE:
         return templates.locationRegister();
       default:
-        return templates.emailAndPwRegister();
+        return templates.accountIdRegister();
     }
   })();
 }

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  registerRole: "",
+  registerRole: "company",
   templateStatus: 0,
   shared: {
     accountId: "",
@@ -10,7 +10,7 @@ const initialState = {
     confirmPw: "",
     name: "",
     phone: null,
-    type: "",
+    type: "company",
   },
   applicant: {
     nationality: "",
@@ -43,7 +43,8 @@ const globalSlice = createSlice({
       state.templateStatus = action.payload;
     },
     resetAuthData: (state, action) => {
-      state[action.user] = initialState[action.user];
+      const { user } = action.payload;
+      state[user] = initialState[user];
       state.templateStatus = 0;
     },
   },

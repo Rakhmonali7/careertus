@@ -20,8 +20,6 @@ const templateStatusEnum = {
   FIVE: 4,
   SIX: 5,
   SEVEN: 6,
-  EIGHT: 7,
-  NINE: 8,
 };
 
 function CompanySignUp() {
@@ -33,22 +31,17 @@ function CompanySignUp() {
   const templateStatus = useSelector(
     (state) => state.globalState.templateStatus
   );
-  const {
-    nationality,
-    gender,
-    location,
-    birthdate,
-    phone,
-    name,
-    language,
-    education,
-    accountId,
-  } = useSelector((state) => state.globalState.applicant);
-  const { applicant, registerRole } = useSelector((state) => state.globalState);
+  const { phone, name, accountId } = useSelector(
+    (state) => state.globalState.shared
+  );
+  const { company_name, industry, website, description } = useSelector(
+    (state) => state.globalState.company
+  );
+  const { company, registerRole } = useSelector((state) => state.globalState);
 
   // hof
-  const handleChange = (key) => (value) => {
-    dispatch(setAuthData({ key, value }));
+  const handleChange = (user, key) => (value) => {
+    dispatch(setAuthData({ user, key, value }));
   };
 
   const handleForwardTemplate = (e, status) => {
@@ -59,9 +52,20 @@ function CompanySignUp() {
   const handleRegisterRole = async (e) => {
     e.preventDefault();
     try {
-      for (let [key, value] of Object.entries(applicant)) {
-        if (key === "email" || key === "password" || key === "confirmPw")
+      for (let [key, value] of Object.entries(shared)) {
+        if (
+          key === "email" ||
+          key === "password" ||
+          key === "confirmPw" ||
+          key === "type"
+        )
           continue;
+        if (value === "" || value === null) {
+          setAlertMessage(`${key} is missing!`);
+          return;
+        }
+      }
+      for (let [key, value] of Object.entries(company)) {
         if (value === "" || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
@@ -72,17 +76,16 @@ function CompanySignUp() {
         account_id: accountId,
         name,
         phone,
-        birthdate,
-        language,
-        country: nationality,
-        education,
+        company_name,
+        industry,
+        website,
+        description,
       };
       console.log({ data });
-      const response = await api.post(endpoints.REGISTER_ROLE, data);
-      console.log({ response });
+      await api.post(endpoints.REGISTER_ROLE, data);
+      dispatch(resetAuthData({ user: "shared" }));
       dispatch(resetAuthData({ user: registerRole }));
-      dispatch(setTemplateStatus(templateStatusEnum.ONE));
-      // navigate("/");
+      navigate("/");
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");
@@ -113,8 +116,8 @@ function CompanySignUp() {
           placeholder="Account Id"
           type="text"
           name="accountId"
-          value={accountId}
-          onChange={handleChange("accountId")}
+          value={accountId || ""}
+          onChange={handleChange("shared", "accountId")}
         />
       </Template>
     ),
@@ -141,8 +144,8 @@ function CompanySignUp() {
           placeholder="Full Name"
           type="text"
           name="name"
-          value={name}
-          onChange={handleChange("name")}
+          value={name || ""}
+          onChange={handleChange("shared", "name")}
         />
       </Template>
     ),
@@ -169,14 +172,14 @@ function CompanySignUp() {
           placeholder="Phone number"
           type="number"
           name="phone"
-          value={phone}
-          onChange={handleChange("phone")}
+          value={phone || ""}
+          onChange={handleChange("shared", "phone")}
         />
       </Template>
     ),
-    languageRegister: () => (
+    companyNameRegister: () => (
       <Template
-        title="Enter your preferred language"
+        title="Enter your company name"
         theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
@@ -194,17 +197,17 @@ function CompanySignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="language"
+          placeholder="Company name"
           type="text"
-          name="language"
-          value={language}
-          onChange={handleChange("language")}
+          name="company_name"
+          value={company_name || ""}
+          onChange={handleChange(registerRole, "company_name")}
         />
       </Template>
     ),
-    educationRegister: () => (
+    industryRegister: () => (
       <Template
-        title="Enter your education"
+        title="Enter your industry"
         theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
         footer={
@@ -222,17 +225,17 @@ function CompanySignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Education"
+          placeholder="Industry"
           type="text"
-          name="education"
-          value={education}
-          onChange={handleChange("education")}
+          name="industry"
+          value={industry || ""}
+          onChange={handleChange(registerRole, "industry")}
         />
       </Template>
     ),
-    nationalityRegister: () => (
+    websiteRegister: () => (
       <Template
-        title="Enter your nationality"
+        title="Enter your website (optional)"
         theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
         footer={
@@ -250,74 +253,18 @@ function CompanySignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Nationality"
+          placeholder="Website link"
           type="text"
-          name="nationality"
-          value={nationality}
-          onChange={handleChange("nationality")}
+          name="website"
+          value={website || ""}
+          onChange={handleChange(registerRole, "website")}
         />
       </Template>
     ),
-    bdRegister: () => (
-      <Template
-        title="Enter your birthdate"
-        theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.EIGHT)}
-        footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
-            Continue
-          </Button>
-        }
-      >
-        {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
-        )}
-        <Input
-          placeholder="Birthday"
-          type="text"
-          name="birthdate"
-          value={birthdate}
-          onChange={handleChange("birthdate")}
-        />
-      </Template>
-    ),
-    genderRegister: () => (
-      <Template
-        title="Select your gender"
-        theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
-        footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
-            Continue
-          </Button>
-        }
-      >
-        {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
-        )}
-        <Input
-          placeholder="Gender"
-          type="text"
-          name="gender"
-          value={gender}
-          onChange={handleChange("gender")}
-        />
-      </Template>
-    ),
-    locationRegister: () => (
+    descriptionRegister: () => (
       <Template
         theme="red"
-        title="Enter your area of residence"
+        title="Enter your company's description"
         onSubmit={handleRegisterRole}
         footer={
           <Button
@@ -334,11 +281,11 @@ function CompanySignUp() {
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
         <Input
-          placeholder="Area of residence"
+          placeholder="Description"
           type="text"
-          name="location"
-          value={location}
-          onChange={handleChange("location")}
+          name="description"
+          value={description || ""}
+          onChange={handleChange(registerRole, "description")}
         />
       </Template>
     ),
@@ -358,19 +305,15 @@ function CompanySignUp() {
       case templateStatusEnum.THREE:
         return templates.phoneRegister();
       case templateStatusEnum.FOUR:
-        return templates.languageRegister();
+        return templates.companyNameRegister();
       case templateStatusEnum.FIVE:
-        return templates.educationRegister();
+        return templates.industryRegister();
       case templateStatusEnum.SIX:
-        return templates.nationalityRegister();
+        return templates.websiteRegister();
       case templateStatusEnum.SEVEN:
-        return templates.bdRegister();
-      case templateStatusEnum.EIGHT:
-        return templates.genderRegister();
-      case templateStatusEnum.NINE:
-        return templates.locationRegister();
+        return templates.descriptionRegister();
       default:
-        return templates.emailAndPwRegister();
+        return templates.accountIdRegister();
     }
   })();
 }
