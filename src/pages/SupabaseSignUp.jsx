@@ -6,6 +6,7 @@ import { Button } from "antd";
 import { setAuthData } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setIsLoggedIn } from "../store/reducers/globalReducer";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -48,8 +49,8 @@ function SupabaseSignUp() {
           emailRedirectTo: `http://localhost:5173/register-role/${registerRole}`,
         },
       });
-      console.log({ data });
       if (error) throw error;
+      dispatch(setIsLoggedIn({ isLoggedIn: true }));
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");

@@ -8,6 +8,7 @@ import SupabaseSignUp from "./SupabaseSignUp";
 import JobFinalEdit from "../components/JobFinalEdit";
 import AdminPage from "./AdminPage";
 import CompanySignUp from "./CompanySignUp";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 function Layout() {
   const location = useLocation(); // Get the current path
@@ -20,15 +21,44 @@ function Layout() {
         <Route path="/supabase-signup" element={<SupabaseSignUp />}></Route>
         <Route
           path="/register-role/applicant"
-          element={<ApplicantSignUp />}
+          element={
+            <ProtectedRoute>
+              <ApplicantSignUp />
+            </ProtectedRoute>
+          }
         ></Route>
         <Route
           path="/register-role/company"
-          element={<CompanySignUp />}
+          element={
+            <ProtectedRoute>
+              <CompanySignUp />
+            </ProtectedRoute>
+          }
         ></Route>
-        <Route path="/accountSetting" element={<AccountSetting />} />
-        <Route path="/companyJobPost" element={<CompanyJobPost />} />
-        <Route path="/jobFinalEdit" element={<JobFinalEdit />} />
+        <Route
+          path="/accountSetting"
+          element={
+            <ProtectedRoute>
+              <AccountSetting />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/companyJobPost"
+          element={
+            <ProtectedRoute>
+              <CompanyJobPost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/jobFinalEdit"
+          element={
+            <ProtectedRoute>
+              <JobFinalEdit />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>

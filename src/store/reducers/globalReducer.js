@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  isLoggedIn: true,
   registerRole: "company",
   templateStatus: 0,
   shared: {
@@ -32,6 +33,9 @@ const globalSlice = createSlice({
   name: "globalState",
   initialState,
   reducers: {
+    setIsLoggedIn: (state, action) => {
+      state.isLoggedIn = action.payload.isLoggedIn;
+    },
     setAuthData: (state, action) => {
       const { user, key, value } = action.payload;
       state[user][key] = value;
@@ -50,6 +54,11 @@ const globalSlice = createSlice({
   },
 });
 
-export const { setUserRole, setTemplateStatus, setAuthData, resetAuthData } =
-  globalSlice.actions;
+export const {
+  setIsLoggedIn,
+  setUserRole,
+  setTemplateStatus,
+  setAuthData,
+  resetAuthData,
+} = globalSlice.actions;
 export default globalSlice.reducer;
