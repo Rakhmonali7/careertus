@@ -6,7 +6,7 @@ import { setUserRole } from "../store/reducers/globalReducer";
 import { useNavigate } from "react-router-dom";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
-import { setSignInData } from "../store/reducers/globalReducer";
+import { setAuthData } from "../store/reducers/globalReducer";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -50,7 +50,7 @@ function Register() {
       },
     } = await api.post(endpoints.USER_SIGN_IN);
     dispatch(
-      setSignInData({
+      setAuthData({
         account_id,
         email,
         nationality,

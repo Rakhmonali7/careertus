@@ -3,32 +3,28 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   registerRole: "",
   templateStatus: 0,
-  signUpData: {
+  shared: {
     accountId: "",
     email: "",
     password: "",
     confirmPw: "",
+    name: "",
+    phone: null,
+    type: "",
+  },
+  applicant: {
     nationality: "",
     gender: "",
     location: "",
     birthdate: "",
-    phone: null,
-    name: "",
     language: "",
     education: "",
   },
-  signInData: {
-    accountId: "",
-    email: "",
-    nationality: "",
-    gender: "",
-    location: "",
-    birthdate: "",
-    phone: null,
-    name: "",
-    language: "",
-    education: "",
-    type: "",
+  company: {
+    company_name: "",
+    industry: "",
+    website: "",
+    description: "",
   },
 };
 
@@ -36,9 +32,9 @@ const globalSlice = createSlice({
   name: "globalState",
   initialState,
   reducers: {
-    setSignInData: (state, action) => {
-      const { key, value } = action.payload;
-      state.signInData[key] = value;
+    setAuthData: (state, action) => {
+      const { user, key, value } = action.payload;
+      state[user][key] = value;
     },
     setUserRole: (state, action) => {
       state.registerRole = action.payload;
@@ -46,22 +42,13 @@ const globalSlice = createSlice({
     setTemplateStatus: (state, action) => {
       state.templateStatus = action.payload;
     },
-    setSignUpData: (state, action) => {
-      const { key, value } = action.payload;
-      state.signUpData[key] = value;
-    },
-    resetSignUpData: (state) => {
-      state.signUpData = initialState.signUpData;
+    resetAuthData: (state, action) => {
+      state[action.user] = initialState[action.user];
       state.templateStatus = 0;
     },
   },
 });
 
-export const {
-  setUserRole,
-  setTemplateStatus,
-  setSignUpData,
-  setSignInData,
-  resetSignUpData,
-} = globalSlice.actions;
+export const { setUserRole, setTemplateStatus, setAuthData, resetAuthData } =
+  globalSlice.actions;
 export default globalSlice.reducer;

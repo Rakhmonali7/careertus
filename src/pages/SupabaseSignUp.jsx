@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import Template from "../components/Template";
 import Input from "../components/Input";
 import { Button } from "antd";
-import { setSignUpData } from "../store/reducers/globalReducer";
+import { setAuthData } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -17,13 +17,13 @@ function SupabaseSignUp() {
 
   const dispatch = useDispatch();
   const { email, password, confirmPw } = useSelector(
-    (state) => state.globalState.signUpData
+    (state) => state.globalState.applicant
   );
   const { registerRole } = useSelector((state) => state.globalState);
 
   // hof
   const handleChange = (key) => (value) => {
-    dispatch(setSignUpData({ key, value }));
+    dispatch(setAuthData({ key, value }));
   };
 
   const validate = () => {

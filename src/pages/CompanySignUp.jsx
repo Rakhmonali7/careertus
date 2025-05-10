@@ -24,7 +24,7 @@ const templateStatusEnum = {
   NINE: 8,
 };
 
-function ApplicantSignUp() {
+function CompanySignUp() {
   const navigate = useNavigate();
 
   const [alertMessage, setAlertMessage] = useState("");
@@ -33,16 +33,22 @@ function ApplicantSignUp() {
   const templateStatus = useSelector(
     (state) => state.globalState.templateStatus
   );
-  const { nationality, gender, location, birthdate, language, education } =
-    useSelector((state) => state.globalState.applicant);
-  const { phone, name, accountId } = useSelector(
-    (state) => state.globalState.shared
-  );
+  const {
+    nationality,
+    gender,
+    location,
+    birthdate,
+    phone,
+    name,
+    language,
+    education,
+    accountId,
+  } = useSelector((state) => state.globalState.applicant);
   const { applicant, registerRole } = useSelector((state) => state.globalState);
 
   // hof
   const handleChange = (key) => (value) => {
-    dispatch(setAuthData({ user: registerRole, key, value }));
+    dispatch(setAuthData({ key, value }));
   };
 
   const handleForwardTemplate = (e, status) => {
@@ -53,15 +59,9 @@ function ApplicantSignUp() {
   const handleRegisterRole = async (e) => {
     e.preventDefault();
     try {
-      for (let [key, value] of Object.entries(shared)) {
+      for (let [key, value] of Object.entries(applicant)) {
         if (key === "email" || key === "password" || key === "confirmPw")
           continue;
-        if (value === "" || value === null) {
-          setAlertMessage(`${key} is missing!`);
-          return;
-        }
-      }
-      for (let [key, value] of Object.entries(applicant)) {
         if (value === "" || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
@@ -77,10 +77,12 @@ function ApplicantSignUp() {
         country: nationality,
         education,
       };
-      await api.post(endpoints.REGISTER_ROLE, data);
+      console.log({ data });
+      const response = await api.post(endpoints.REGISTER_ROLE, data);
+      console.log({ response });
       dispatch(resetAuthData({ user: registerRole }));
       dispatch(setTemplateStatus(templateStatusEnum.ONE));
-      navigate("/");
+      // navigate("/");
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");
@@ -91,6 +93,7 @@ function ApplicantSignUp() {
     accountIdRegister: () => (
       <Template
         title="Enter a new account id"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TWO)}
         footer={
           <Button
@@ -118,6 +121,7 @@ function ApplicantSignUp() {
     nameRegister: () => (
       <Template
         title="Enter your fullname"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
         footer={
           <Button
@@ -145,6 +149,7 @@ function ApplicantSignUp() {
     phoneRegister: () => (
       <Template
         title="Enter your phone number"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
           <Button
@@ -172,6 +177,7 @@ function ApplicantSignUp() {
     languageRegister: () => (
       <Template
         title="Enter your preferred language"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
           <Button
@@ -199,6 +205,7 @@ function ApplicantSignUp() {
     educationRegister: () => (
       <Template
         title="Enter your education"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
         footer={
           <Button
@@ -226,6 +233,7 @@ function ApplicantSignUp() {
     nationalityRegister: () => (
       <Template
         title="Enter your nationality"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
         footer={
           <Button
@@ -253,6 +261,7 @@ function ApplicantSignUp() {
     bdRegister: () => (
       <Template
         title="Enter your birthdate"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.EIGHT)}
         footer={
           <Button
@@ -280,6 +289,7 @@ function ApplicantSignUp() {
     genderRegister: () => (
       <Template
         title="Select your gender"
+        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.NINE)}
         footer={
           <Button
@@ -306,6 +316,7 @@ function ApplicantSignUp() {
     ),
     locationRegister: () => (
       <Template
+        theme="red"
         title="Enter your area of residence"
         onSubmit={handleRegisterRole}
         footer={
@@ -364,4 +375,4 @@ function ApplicantSignUp() {
   })();
 }
 
-export default ApplicantSignUp;
+export default CompanySignUp;
