@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Template from "../components/Template";
 import Input from "../components/Input";
-import { Button, ConfigProvider, Flex } from 'antd';
+import { Button, ConfigProvider, Flex } from "antd";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
 import {
@@ -62,6 +62,8 @@ function ApplicantSignUp() {
     e.preventDefault();
     try {
       for (let [key, value] of Object.entries(signUpData)) {
+        if (key === "email" || key === "password" || key === "confirmPw")
+          continue;
         if (value === "" || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
@@ -77,6 +79,7 @@ function ApplicantSignUp() {
         country: nationality,
         education,
       };
+      console.log({ data });
       const response = await api.post(endpoints.REGISTER_ROLE, data);
       console.log({ response });
       dispatch(resetSignUpData());

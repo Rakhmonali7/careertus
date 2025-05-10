@@ -59,7 +59,7 @@ function SupabaseSignUp() {
   return (
     <Template
       title={`Create account as ${registerRole}`}
-      onSubmit={(e) => supabaseSignUp(e, templateStatusEnum.TWO)}
+      onSubmit={(e) => supabaseSignUp(e)}
       footer={
         <Button htmlType="submit" size="large" color="default" variant="solid">
           Continue
