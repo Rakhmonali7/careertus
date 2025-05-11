@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, message, Card, Upload } from 'antd';
-import { EditOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useState, useRef } from 'react';
+import { Pencil, UploadCloud } from 'lucide-react';
+
+const initialData = {
+  id: 'user123',
+  name: 'John Doe',
+  email: 'user@example.com',
+  phone: '+82-10-1234-5678',
+  birthDay: '1990-01-01',
+  gender: 'male',
+  language: 'English',
+  country: 'South Korea',
+};
 
 const fieldLabels = {
   id: 'User ID',
@@ -13,146 +23,124 @@ const fieldLabels = {
   country: 'Country',
 };
 
-function AccountSetting() {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [fileList, setFileList] = useState([]);
+const EditableField = ({ label, field, value, editable, onSave }) => {
+  const [editing, setEditing] = useState(false);
+  const [tempValue, setTempValue] = useState(value || '');
 
-  const initialValues = {
-    id: 'user123',
-    name: 'John Doe',
-    email: 'user@example.com',
-    phone: '+82-10-1234-5678',
-    birthDay: '1990-01-01',
-    gender: 'male',
-    language: 'English',
-    country: 'South Korea',
-  };
-
-  const [editingFields, setEditingFields] = useState(
-    Object.keys(initialValues).reduce(
-      (acc, key) => ({ ...acc, [key]: false }),
-      {}
-    )
-  );
-
-  const toggleEdit = field => {
-    setEditingFields(prev => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const onFinish = async values => {
-    setLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      message.success('Profile updated successfully!');
-      console.log('Updated values:', values);
-    } catch (error) {
-      message.error('Failed to update profile.');
-    }
-    setLoading(false);
-    setEditingFields(prev =>
-      Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: false }), {})
-    );
-  };
-
-  const beforeUpload = file => {
-    const isPDF = file.type === 'application/pdf';
-    const isLt15M = file.size / 1024 / 1024 < 15;
-
-    if (!isPDF) {
-      message.error('Only PDF files are allowed!');
-    }
-
-    if (!isLt15M) {
-      message.error('File must be smaller than 15MB!');
-    }
-
-    return isPDF && isLt15M;
-  };
-
-  const handleUploadChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList.slice(-1)); // only keep the latest file
+  const save = () => {
+    setEditing(false);
+    if (tempValue !== value) onSave(field, tempValue);
   };
 
   return (
-    <div className="w-screen h-screen overflow-auto">
-      <div className="px-[20%] py-[5%]">
-        <Card
-          className="bg-[#f6f5f5] rounded-lg shadow-md"
-          title="Account Settings"
-        >
-          <Form
-            form={form}
-            layout="vertical"
-            initialValues={initialValues}
-            onFinish={onFinish}
+    <div className="flex justify-between items-center py-2">
+      <div className="w-1/2 font-medium text-gray-800">{label}</div>
+      <div className="w-1/2 flex items-center justify-between">
+        {editing ? (
+          <input
+            type="text"
+            className="border border-gray-300 px-2 py-1 rounded w-full text-sm"
+            value={tempValue}
+            onChange={e => setTempValue(e.target.value)}
+            onBlur={save}
+            onKeyDown={e => e.key === 'Enter' && save()}
+            autoFocus
+          />
+        ) : (
+          <span className="text-gray-700 text-sm">{value || '-'}</span>
+        )}
+        {editable && (
+          <button
+            className="ml-2 text-gray-500 hover:text-gray-800"
+            onClick={() => {
+              setTempValue(value || '');
+              setEditing(true);
+            }}
           >
-            {Object.keys(initialValues).map(field => (
-              <div className="flex items-center gap-4 mb-4" key={field}>
-                <label className="w-40 font-medium text-gray-700">
-                  {fieldLabels[field] || field}
-                  <span className="text-red-500 ml-1">*</span>
-                </label>
-                <div className="flex-1 flex items-center gap-2">
-                  <Form.Item
-                    name={field}
-                    noStyle
-                    rules={[
-                      {
-                        required: true,
-                        message: `Please enter ${fieldLabels[field] || field}`,
-                      },
-                    ]}
-                  >
-                    <Input disabled={field === 'id' || !editingFields[field]} />
-                  </Form.Item>
-                  {field !== 'id' && (
-                    <Button
-                      type="text"
-                      icon={<EditOutlined />}
-                      onClick={() => toggleEdit(field)}
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
+            <Pencil size={16} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
-            <div
-              className="mb-6 
-            "
-            >
-              <label className="block font-medium text-gray-700 mb-2">
-                Resume Upload (PDF only, max 15MB)
-              </label>
-              <Upload
-                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                fileList={fileList}
-                onChange={handleUploadChange}
-                beforeUpload={beforeUpload}
-                showUploadList={{ showPreviewIcon: false }}
-                accept=".pdf"
-              >
-                <Button icon={<UploadOutlined />}>Upload Resume</Button>
-              </Upload>
-            </div>
+export default function AccountSetting() {
+  const [formData, setFormData] = useState(initialData);
+  const [resume, setResume] = useState(null);
+  const fileInputRef = useRef();
 
-            <div className="flex justify-end">
-              <Form.Item className="mb-0">
-                <Button
-                  color="default"
-                  variant="solid"
-                  htmlType="submit"
-                  loading={loading}
-                >
-                  Save Changes
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
-        </Card>
+  const updateField = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleResumeUpload = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Only PDF files are allowed.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File must be smaller than 15MB.');
+      return;
+    }
+
+    setResume(file);
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
+      <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
+
+      {Object.keys(formData).map(field => (
+        <EditableField
+          key={field}
+          label={fieldLabels[field]}
+          field={field}
+          value={formData[field]}
+          editable={field !== 'id'}
+          onSave={updateField}
+        />
+      ))}
+
+      {/* Resume Upload */}
+      <div className="mt-6">
+        <label className="block font-medium text-gray-700 mb-2">
+          Resume Upload (PDF only, max 5MB)
+        </label>
+        <div className="flex items-center gap-4">
+          <input
+            type="file"
+            accept="application/pdf"
+            ref={fileInputRef}
+            onChange={handleResumeUpload}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current.click()}
+            className="flex items-center px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+          >
+            <UploadCloud size={16} className="mr-2" />
+            Upload Resume
+          </button>
+          {resume && (
+            <span className="text-sm text-gray-600">{resume.name}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom Buttons */}
+      <div className="flex justify-between mt-6">
+        <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+          Back
+        </button>
+        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+          Continue
+        </button>
       </div>
     </div>
   );
 }
-
-export default AccountSetting;
