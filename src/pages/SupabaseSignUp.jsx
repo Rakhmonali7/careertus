@@ -18,13 +18,13 @@ function SupabaseSignUp() {
 
   const dispatch = useDispatch();
   const { email, password, confirmPw } = useSelector(
-    (state) => state.globalState.applicant
+    (state) => state.globalState.shared
   );
   const { registerRole } = useSelector((state) => state.globalState);
 
   // hof
   const handleChange = (key) => (value) => {
-    dispatch(setAuthData({ key, value }));
+    dispatch(setAuthData({ user: "shared", key, value }));
   };
 
   const validate = () => {
@@ -42,7 +42,7 @@ function SupabaseSignUp() {
         setAlertMessage(errorMsg);
         return;
       }
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {

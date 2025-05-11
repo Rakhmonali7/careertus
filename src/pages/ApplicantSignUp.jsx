@@ -11,6 +11,7 @@ import {
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { pages } from "../configs/pages";
 
 const templateStatusEnum = {
   ONE: 0,
@@ -80,6 +81,7 @@ function ApplicantSignUp() {
       }
       const data = {
         type: registerRole,
+        type: "applicant",
         account_id: accountId,
         name,
         phone,
@@ -92,7 +94,7 @@ function ApplicantSignUp() {
       dispatch(resetAuthData({ user: "shared" }));
       dispatch(resetAuthData({ user: registerRole }));
       dispatch(setTemplateStatus(templateStatusEnum.ONE));
-      navigate("/");
+      navigate(pages.ACCOUNT_SETTING);
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");
@@ -231,7 +233,7 @@ function ApplicantSignUp() {
           type="text"
           name="education"
           value={education || ""}
-          onChange={handleChange(registerRole, "education")}
+          onChange={handleChange("applicant", "education")}
         />
       </Template>
     ),
@@ -258,7 +260,7 @@ function ApplicantSignUp() {
           type="text"
           name="nationality"
           value={nationality || ""}
-          onChange={handleChange(registerRole, "nationality")}
+          onChange={handleChange("applicant", "nationality")}
         />
       </Template>
     ),
@@ -285,7 +287,7 @@ function ApplicantSignUp() {
           type="text"
           name="birthdate"
           value={birthdate || ""}
-          onChange={handleChange(registerRole, "birthdate")}
+          onChange={handleChange("applicant", "birthdate")}
         />
       </Template>
     ),
@@ -312,7 +314,7 @@ function ApplicantSignUp() {
           type="text"
           name="gender"
           value={gender || ""}
-          onChange={handleChange(registerRole, "gender")}
+          onChange={handleChange("applicant", "gender")}
         />
       </Template>
     ),
@@ -339,7 +341,7 @@ function ApplicantSignUp() {
           type="text"
           name="location"
           value={location || ""}
-          onChange={handleChange(registerRole, "location")}
+          onChange={handleChange("applicant", "location")}
         />
       </Template>
     ),

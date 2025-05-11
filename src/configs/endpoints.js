@@ -6,4 +6,5 @@ export const endpoints = {
   JOB_POST: "/api/job-post",
   JOB_UPDATE: "/api/job_update",
   JOBS: "/api/jobs",
+  USER_INFO: (type) => `/api/user-info/${type}`,
 };

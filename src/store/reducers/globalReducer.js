@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoggedIn: true,
-  registerRole: "company",
+  isLoggedIn: false,
+  registerRole: "applicant",
   templateStatus: 0,
   shared: {
     accountId: "",
@@ -11,7 +11,7 @@ const initialState = {
     confirmPw: "",
     name: "",
     phone: null,
-    type: "company",
+    type: "applicant",
   },
   applicant: {
     nationality: "",
