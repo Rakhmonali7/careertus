@@ -31,6 +31,7 @@ function Nav() {
             <img
               className="h-6 w-auto cursor-pointer"
               src={profileIcon}
+              onClick={handleLogin}
               alt="profile-icon"
             />
           </div>

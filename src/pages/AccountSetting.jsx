@@ -1,15 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Pencil, UploadCloud } from "lucide-react";
+import api from "../configs/config";
+import { endpoints } from "../configs/endpoints";
+import { useSelector } from "react-redux";
 
 const initialData = {
-  id: "user123",
-  name: "John Doe",
-  email: "user@example.com",
-  phone: "+82-10-1234-5678",
-  birthDay: "1990-01-01",
-  gender: "male",
-  language: "English",
-  country: "South Korea",
+  id: "",
+  name: "",
+  email: "",
+  phone: "",
+  birthdate: "",
+  gender: "",
+  language: "",
+  country: "",
 };
 
 const fieldLabels = {
@@ -17,7 +20,7 @@ const fieldLabels = {
   name: "Full Name",
   email: "Email Address",
   phone: "Phone Number",
-  birthdate: "Birthday",
+  birthdate: "Birthdate",
   gender: "Gender",
   language: "Preferred Language",
   country: "Country",
@@ -92,6 +95,8 @@ export default function AccountSetting() {
   const [resume, setResume] = useState(null);
   const fileInputRef = useRef();
 
+  const { registerRole } = useSelector((state) => state.globalState);
+
   const updateField = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
@@ -113,9 +118,33 @@ export default function AccountSetting() {
     setResume(file);
   };
 
-  // useEffect(() => {
-  //   queryAndSetAccountSettings();
-  // }, []);
+  const queryAndSetAccountSettings = async () => {
+    try {
+      const {
+        data: { user },
+      } = await api.get(endpoints.USER_INFO(registerRole));
+      let { account_id, name, email, phone, birthdate, language, country } =
+        user;
+
+      setFormData((prev) => ({
+        ...prev,
+        id: account_id,
+        name,
+        email,
+        phone,
+        birthdate,
+        gender: "male",
+        language,
+        country,
+      }));
+    } catch (err) {
+      console.log("Account settings query error:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    queryAndSetAccountSettings();
+  }, []);
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
       <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
