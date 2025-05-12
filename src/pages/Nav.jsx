@@ -3,7 +3,7 @@ import logo from "../assets/reg-logo.svg";
 import profileIcon from "../assets/profile-icon.svg";
 import search from "../assets/search-icon.svg";
 import Button from "../components/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function Nav() {
   const navigate = useNavigate();
