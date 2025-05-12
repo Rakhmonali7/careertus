@@ -8,6 +8,7 @@ import {
   setTemplateStatus,
   setAuthData,
   resetAuthData,
+  setAuthDataBulk,
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +38,9 @@ function CompanySignUp() {
   const { company_name, industry, website, description } = useSelector(
     (state) => state.globalState.company
   );
-  const { company, registerRole } = useSelector((state) => state.globalState);
+  const { shared, company, registerRole } = useSelector(
+    (state) => state.globalState
+  );
 
   // hof
   const handleChange = (user, key) => (value) => {
@@ -71,7 +74,7 @@ function CompanySignUp() {
           return;
         }
       }
-      const data = {
+      const dataPayload = {
         type: registerRole,
         account_id: accountId,
         name,
@@ -81,10 +84,28 @@ function CompanySignUp() {
         website,
         description,
       };
-      console.log({ data });
-      await api.post(endpoints.REGISTER_ROLE, data);
-      dispatch(resetAuthData({ user: "shared" }));
-      dispatch(resetAuthData({ user: registerRole }));
+      const token = localStorage.getItem("token");
+      api.defaults.headers.common["Authorization"] = token
+        ? `Bearer ${token}`
+        : "";
+      const {
+        data: { user },
+      } = await api.post(endpoints.REGISTER_ROLE, dataPayload);
+      console.log({ user });
+      let { account_id, email, name: _name, phone: _phone, type: _type } = user;
+      dispatch(
+        setAuthDataBulk({
+          user: "shared",
+          data: {
+            accountId: account_id,
+            email,
+            name: _name,
+            phone: _phone,
+            type: _type,
+          },
+        })
+      );
+      dispatch(setAuthDataBulk({ user: registerRole, data: user }));
       navigate("/");
     } catch (err) {
       console.log(err.message);
