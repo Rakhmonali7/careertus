@@ -40,6 +40,16 @@ const globalSlice = createSlice({
       const { user, key, value } = action.payload;
       state[user][key] = value;
     },
+    setAuthDataBulk: (state, action) => {
+      const { user, data } = action.payload;
+      for (let [key, value] of Object.entries(data)) {
+        if (!state[user]) {
+          console.log(`${state[user]} does not exist`);
+          return;
+        }
+        state[user][key] = value;
+      }
+    },
     setUserRole: (state, action) => {
       state.registerRole = action.payload;
     },
@@ -60,5 +70,6 @@ export const {
   setTemplateStatus,
   setAuthData,
   resetAuthData,
+  setAuthDataBulk,
 } = globalSlice.actions;
 export default globalSlice.reducer;

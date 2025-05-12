@@ -17,10 +17,11 @@ const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ["persist/PERSIST"],
-        ignoredPaths: ["register"],
-      },
+      // serializableCheck: {
+      //   ignoredActions: ["persist/PERSIST"],
+      //   ignoredPaths: ["register"],
+      // },
+      serializableCheck: false,
     }),
 });
 

@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import logo from "../assets/reg-logo.svg";
 import { createClient } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
-import { setUserRole } from "../store/reducers/globalReducer";
+import {
+  setAuthDataBulk,
+  setIsLoggedIn,
+  setUserRole,
+} from "../store/reducers/globalReducer";
 import { useNavigate } from "react-router-dom";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
@@ -14,7 +18,7 @@ const supabase = createClient(
 );
 
 function Register() {
-  const [email, setEmail] = useState("");
+  const [emailInput, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [tag, setTag] = useState("applicant");
 
@@ -30,7 +34,7 @@ function Register() {
   async function signIn(event) {
     event.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: emailInput,
       password,
     });
     if (error) {
@@ -50,20 +54,32 @@ function Register() {
       },
     } = await api.post(endpoints.USER_SIGN_IN);
     dispatch(
-      setAuthData({
-        account_id,
-        email,
-        nationality,
-        gender,
-        location: country,
-        birthdate,
-        phone,
-        name,
-        language,
-        education,
-        type,
+      setAuthDataBulk({
+        user: "shared",
+        data: {
+          accountId: account_id,
+          email,
+          type,
+          phone,
+          name,
+        },
       })
     );
+    dispatch(
+      setAuthDataBulk({
+        user: tag,
+        data: {
+          nationality: country,
+          location: country,
+          birthdate,
+          language,
+          education,
+          // gender,
+        },
+      })
+    );
+    // need to implement company sign-in case
+    dispatch(setIsLoggedIn({ isLoggedIn: true })); // log the user in
     navigate("/");
   }
 
