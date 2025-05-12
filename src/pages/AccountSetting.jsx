@@ -113,9 +113,9 @@ export default function AccountSetting() {
     setResume(file);
   };
 
-  useEffect(() => {
-    queryAndSetAccountSettings();
-  }, []);
+  // useEffect(() => {
+  //   queryAndSetAccountSettings();
+  // }, []);
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
       <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
