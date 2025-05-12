@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import CustomButton from '../components/Button';
 
-const jobType = [
+const jobTypeOptions = [
   'full-time',
   'part-time',
   'internship',
@@ -10,7 +11,7 @@ const jobType = [
   'permanent',
 ];
 
-const experience = [
+const experienceOptions = [
   'no-experience',
   'under 1 year',
   'entry-level',
@@ -24,21 +25,61 @@ const experience = [
 ];
 
 function Step1JobCreate() {
+  const [selectedOptions, setSelectedOptions] = useState({
+    jobType: [],
+    experience: [],
+  });
+
+  const toggleJobType = value => {
+    setSelectedOptions(prev => {
+      const isSelected = prev.jobType.includes(value);
+      const updated = isSelected
+        ? prev.jobType.filter(item => item !== value)
+        : [...prev.jobType, value];
+      return { ...prev, jobType: updated };
+    });
+  };
+
+  const selectExperience = value => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      experience: [value], // allow only one
+    }));
+  };
+
+  console.log('Selected Options:', selectedOptions);
+
   return (
     <div>
       <div className="mb-6">
         <h2>Job Type</h2>
         <div className="flex flex-wrap gap-2 my-4">
-          {jobType.map(type => (
-            <CustomButton key={type} name={type} theme="red" />
+          {jobTypeOptions.map(type => (
+            <CustomButton
+              key={type}
+              name={type}
+              theme={selectedOptions.jobType.includes(type) ? 'red' : 'gray'}
+              onClick={e => {
+                e.preventDefault();
+                toggleJobType(type);
+              }}
+            />
           ))}
         </div>
       </div>
       <div>
         <h2>Experience</h2>
         <div className="flex flex-wrap gap-2 mt-4">
-          {experience.map(exp => (
-            <CustomButton key={exp} name={exp} theme="red" />
+          {experienceOptions.map(exp => (
+            <CustomButton
+              key={exp}
+              name={exp}
+              theme={selectedOptions.experience.includes(exp) ? 'red' : 'gray'}
+              onClick={e => {
+                e.preventDefault();
+                selectExperience(exp);
+              }}
+            />
           ))}
         </div>
       </div>

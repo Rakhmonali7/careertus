@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
-import Template from "../components/Template";
-import Input from "../components/Input";
-import { Button, ConfigProvider, Flex } from "antd";
-import api from "../configs/config";
-import { endpoints } from "../configs/endpoints";
+import { useEffect, useState } from 'react';
+import Template from '../components/Template';
+import Input from '../components/Input';
+import { Button, ConfigProvider, Flex } from 'antd';
+import api from '../configs/config';
+import { endpoints } from '../configs/endpoints';
 import {
   setTemplateStatus,
   setAuthData,
   resetAuthData,
   setAuthDataBulk,
-} from "../store/reducers/globalReducer";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { pages } from "../configs/pages";
+} from '../store/reducers/globalReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { pages } from '../configs/pages';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const templateStatusEnum = {
   ONE: 0,
@@ -27,24 +29,22 @@ const templateStatusEnum = {
 function CompanySignUp() {
   const navigate = useNavigate();
 
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
 
   const dispatch = useDispatch();
-  const templateStatus = useSelector(
-    (state) => state.globalState.templateStatus
-  );
+  const templateStatus = useSelector(state => state.globalState.templateStatus);
   const { phone, name, accountId } = useSelector(
-    (state) => state.globalState.shared
+    state => state.globalState.shared
   );
   const { company_name, industry, website, description } = useSelector(
-    (state) => state.globalState.company
+    state => state.globalState.company
   );
   const { shared, company, registerRole } = useSelector(
-    (state) => state.globalState
+    state => state.globalState
   );
 
   // hof
-  const handleChange = (user, key) => (value) => {
+  const handleChange = (user, key) => value => {
     dispatch(setAuthData({ user, key, value }));
   };
 
@@ -53,24 +53,24 @@ function CompanySignUp() {
     dispatch(setTemplateStatus(status));
   };
 
-  const handleRegisterRole = async (e) => {
+  const handleRegisterRole = async e => {
     e.preventDefault();
     try {
       for (let [key, value] of Object.entries(shared)) {
         if (
-          key === "email" ||
-          key === "password" ||
-          key === "confirmPw" ||
-          key === "type"
+          key === 'email' ||
+          key === 'password' ||
+          key === 'confirmPw' ||
+          key === 'type'
         )
           continue;
-        if (value === "" || value === null) {
+        if (value === '' || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
         }
       }
       for (let [key, value] of Object.entries(company)) {
-        if (value === "" || value === null) {
+        if (value === '' || value === null) {
           setAlertMessage(`${key} is missing!`);
           return;
         }
@@ -85,10 +85,10 @@ function CompanySignUp() {
         website,
         description,
       };
-      const token = localStorage.getItem("token");
-      api.defaults.headers.common["Authorization"] = token
+      const token = localStorage.getItem('token');
+      api.defaults.headers.common['Authorization'] = token
         ? `Bearer ${token}`
-        : "";
+        : '';
       const {
         data: { user },
       } = await api.post(endpoints.REGISTER_ROLE, dataPayload);
@@ -96,7 +96,7 @@ function CompanySignUp() {
       let { account_id, email, name: _name, phone: _phone, type: _type } = user;
       dispatch(
         setAuthDataBulk({
-          user: "shared",
+          user: 'shared',
           data: {
             accountId: account_id,
             email,
@@ -111,7 +111,7 @@ function CompanySignUp() {
       navigate(pages.JOB_FINAL_EDIT);
     } catch (err) {
       console.log(err.message);
-      setAlertMessage(err.message || "Something went wrong.");
+      setAlertMessage(err.message || 'Something went wrong.');
     }
   };
 
@@ -120,7 +120,7 @@ function CompanySignUp() {
       <Template
         title="Enter a new account id"
         theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TWO)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.TWO)}
         footer={
           <Button
             htmlType="submit"
@@ -139,8 +139,8 @@ function CompanySignUp() {
           placeholder="Account Id"
           type="text"
           name="accountId"
-          value={accountId || ""}
-          onChange={handleChange("shared", "accountId")}
+          value={accountId || ''}
+          onChange={handleChange('shared', 'accountId')}
         />
       </Template>
     ),
@@ -148,7 +148,7 @@ function CompanySignUp() {
       <Template
         title="Enter your fullname"
         theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.THREE)}
         footer={
           <Button
             htmlType="submit"
@@ -167,44 +167,42 @@ function CompanySignUp() {
           placeholder="Full Name"
           type="text"
           name="name"
-          value={name || ""}
-          onChange={handleChange("shared", "name")}
+          value={name || ''}
+          onChange={handleChange('shared', 'name')}
         />
       </Template>
     ),
     phoneRegister: () => (
       <Template
+        theme={'red'}
         title="Enter your phone number"
-        theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
-        <Input
-          placeholder="Phone number"
-          type="number"
-          name="phone"
-          value={phone || ""}
-          onChange={handleChange("shared", "phone")}
+        <PhoneInput
+          country={'kr'}
+          value={phone || ''}
+          onChange={value =>
+            dispatch(setAuthData({ user: 'shared', key: 'phone', value }))
+          }
+          inputStyle={{ width: '100%' }}
+          specialLabel=""
         />
       </Template>
     ),
+
     companyNameRegister: () => (
       <Template
         title="Enter your company name"
         theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
           <Button
             htmlType="submit"
@@ -223,8 +221,8 @@ function CompanySignUp() {
           placeholder="Company name"
           type="text"
           name="company_name"
-          value={company_name || ""}
-          onChange={handleChange(registerRole, "company_name")}
+          value={company_name || ''}
+          onChange={handleChange('company', 'company_name')}
         />
       </Template>
     ),
@@ -232,7 +230,7 @@ function CompanySignUp() {
       <Template
         title="Enter your industry"
         theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.SIX)}
         footer={
           <Button
             htmlType="submit"
@@ -251,8 +249,8 @@ function CompanySignUp() {
           placeholder="Industry"
           type="text"
           name="industry"
-          value={industry || ""}
-          onChange={handleChange(registerRole, "industry")}
+          value={industry || ''}
+          onChange={handleChange('company', 'industry')}
         />
       </Template>
     ),
@@ -260,7 +258,7 @@ function CompanySignUp() {
       <Template
         title="Enter your website (optional)"
         theme="red"
-        onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
+        onSubmit={e => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
         footer={
           <Button
             htmlType="submit"
@@ -279,8 +277,8 @@ function CompanySignUp() {
           placeholder="Website link"
           type="text"
           name="website"
-          value={website || ""}
-          onChange={handleChange(registerRole, "website")}
+          value={website || ''}
+          onChange={handleChange('company', 'website')}
         />
       </Template>
     ),
@@ -307,8 +305,8 @@ function CompanySignUp() {
           placeholder="Description"
           type="text"
           name="description"
-          value={description || ""}
-          onChange={handleChange(registerRole, "description")}
+          value={description || ''}
+          onChange={handleChange('company', 'description')}
         />
       </Template>
     ),
