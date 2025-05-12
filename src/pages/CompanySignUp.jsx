@@ -13,6 +13,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { pages } from "../configs/pages";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const templateStatusEnum = {
   ONE: 0,
@@ -174,32 +176,30 @@ function CompanySignUp() {
     ),
     phoneRegister: () => (
       <Template
+        theme={"red"}
         title="Enter your phone number"
-        theme="red"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
-        <Input
-          placeholder="Phone number"
-          type="number"
-          name="phone"
+        <PhoneInput
+          country={"kr"}
           value={phone || ""}
-          onChange={handleChange("shared", "phone")}
+          onChange={(value) =>
+            dispatch(setAuthData({ user: "shared", key: "phone", value }))
+          }
+          inputStyle={{ width: "100%" }}
+          specialLabel=""
         />
       </Template>
     ),
+
     companyNameRegister: () => (
       <Template
         title="Enter your company name"
