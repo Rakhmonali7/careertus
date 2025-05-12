@@ -34,16 +34,15 @@ function Register() {
   async function signIn(event) {
     event.preventDefault();
     const {
-      data: { session: access_token },
+      data: { session },
       error,
     } = await supabase.auth.signInWithPassword({
       email: emailInput,
       password,
     });
+    const { access_token } = session;
     localStorage.setItem("token", access_token);
-    api.defaults.headers.common["Authorization"] = access_token
-      ? `Bearer ${access_token}`
-      : "";
+    api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
     if (error) {
       alert(error.message);
       console.log(error.message);
