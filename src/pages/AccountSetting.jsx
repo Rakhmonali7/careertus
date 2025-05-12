@@ -246,7 +246,10 @@ export default function AccountSetting() {
         >
           Logout
         </button>
-        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <button
+          onClick={() => navigate("/")}
+          className="px-4 py-2 cursor-pointer bg-red-500 text-white rounded hover:bg-red-600"
+        >
           Continue
         </button>
       </div>

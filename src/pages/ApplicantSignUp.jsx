@@ -80,7 +80,6 @@ function ApplicantSignUp() {
         return;
       }
       const data = {
-        type: registerRole,
         type: "applicant",
         account_id: accountId,
         name,
@@ -90,7 +89,13 @@ function ApplicantSignUp() {
         country: nationality,
         education,
       };
-      await api.post(endpoints.REGISTER_ROLE, data);
+      const token = localStorage.getItem("token");
+      api.defaults.headers.common["Authorization"] = token
+        ? `Bearer ${token}`
+        : "";
+      const response = await api.post(endpoints.REGISTER_ROLE, data);
+      console.log({ response });
+
       dispatch(resetAuthData({ user: "shared" }));
       dispatch(resetAuthData({ user: registerRole }));
       dispatch(setTemplateStatus(templateStatusEnum.ONE));

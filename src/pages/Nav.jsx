@@ -4,6 +4,7 @@ import profileIcon from "../assets/profile-icon.svg";
 import search from "../assets/search-icon.svg";
 import Button from "../components/Button";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function Nav() {
   const navigate = useNavigate();
@@ -16,6 +17,9 @@ function Nav() {
       navigate("/register");
     }
   };
+  useEffect(() => {
+    console.log({ isAuthenticated, accountId });
+  });
   return (
     <div className="pt-12 px-50">
       <div className="flex justify-between">
