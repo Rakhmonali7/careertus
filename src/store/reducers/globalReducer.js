@@ -61,6 +61,11 @@ const globalSlice = createSlice({
       state[user] = initialState[user];
       state.templateStatus = 0;
     },
+    handleLogout: (state) => {
+      state.isLoggedIn = false;
+      state.registerRole = "";
+      localStorage.removeItem("token");
+    },
   },
 });
 
@@ -71,5 +76,6 @@ export const {
   setAuthData,
   resetAuthData,
   setAuthDataBulk,
+  handleLogout,
 } = globalSlice.actions;
 export default globalSlice.reducer;

@@ -1,11 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
 import { Pencil, UploadCloud } from "lucide-react";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { handleLogout, resetAuthData } from "../store/reducers/globalReducer";
+import { useNavigate } from "react-router-dom";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const initialData = {
-  id: "",
+  accountId: "",
   name: "",
   email: "",
   phone: "",
@@ -16,7 +24,7 @@ const initialData = {
 };
 
 const fieldLabels = {
-  id: "User ID",
+  accountId: "User ID",
   name: "Full Name",
   email: "Email Address",
   phone: "Phone Number",
@@ -94,6 +102,8 @@ export default function AccountSetting() {
   const [formData, setFormData] = useState(initialData);
   const [resume, setResume] = useState(null);
   const fileInputRef = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { registerRole } = useSelector((state) => state.globalState);
 
@@ -118,8 +128,25 @@ export default function AccountSetting() {
     setResume(file);
   };
 
+  const logoutHandler = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.log("Logout issue!", error.message);
+        return;
+      }
+      dispatch(handleLogout());
+      dispatch(resetAuthData({ user: "shared" }));
+      dispatch(resetAuthData({ user: "applicant" }));
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const queryAndSetAccountSettings = async () => {
     try {
+      // need to implement fetching data from the store and updating store upon account setting change
       const {
         data: { user },
       } = await api.get(endpoints.USER_INFO(registerRole));
@@ -128,7 +155,7 @@ export default function AccountSetting() {
 
       setFormData((prev) => ({
         ...prev,
-        id: account_id,
+        accountId: account_id,
         name,
         email,
         phone,
@@ -213,8 +240,11 @@ export default function AccountSetting() {
 
       {/* Bottom Buttons */}
       <div className="flex justify-between mt-6">
-        <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-          Back
+        <button
+          onClick={logoutHandler}
+          className="px-4 cursor-pointer py-2 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          Logout
         </button>
         <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
           Continue

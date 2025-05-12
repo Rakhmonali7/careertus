@@ -33,10 +33,17 @@ function Register() {
 
   async function signIn(event) {
     event.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({
+    const {
+      data: { session: access_token },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email: emailInput,
       password,
     });
+    localStorage.setItem("token", access_token);
+    api.defaults.headers.common["Authorization"] = access_token
+      ? `Bearer ${access_token}`
+      : "";
     if (error) {
       alert(error.message);
       console.log(error.message);
@@ -91,7 +98,12 @@ function Register() {
     <div className="flex min-h-screen w-full items-center justify-center px-4">
       <div className="w-full max-w-lg sm:max-w-md md:max-w-lg flex flex-col justify-center border rounded-2xl p-6 sm:p-8 md:p-18 bg-white shadow-lg">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img alt="Company logo" src={logo} className="mx-auto h-10 w-auto" />
+          <img
+            onClick={() => navigate("/")}
+            alt="Company logo"
+            src={logo}
+            className="mx-auto h-10 w-auto cursor-pointer"
+          />
         </div>
 
         <div className="flex justify-between mt-6 sm:mt-10 mb-6 sm:mb-8 border-b-2">
