@@ -63,7 +63,7 @@ const globalSlice = createSlice({
     },
     handleLogout: (state) => {
       state.isLoggedIn = false;
-      state.registerRole = "";
+      state.registerRole = initialState.registerRole;
       localStorage.removeItem("token");
     },
   },

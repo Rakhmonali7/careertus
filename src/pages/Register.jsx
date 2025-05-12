@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import logo from "../assets/reg-logo.svg";
 import { createClient } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
 import { setAuthData } from "../store/reducers/globalReducer";
+import { pages } from "../configs/pages";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -20,7 +21,7 @@ const supabase = createClient(
 function Register() {
   const [emailInput, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [tag, setTag] = useState("applicant");
+  const [tag, setTag] = useState("");
 
   const dispatch = useDispatch();
 
@@ -32,66 +33,80 @@ function Register() {
   };
 
   async function signIn(event) {
-    event.preventDefault();
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signInWithPassword({
-      email: emailInput,
-      password,
-    });
-    const { access_token } = session;
-    localStorage.setItem("token", access_token);
-    api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-    if (error) {
-      alert(error.message);
-      console.log(error.message);
-      return;
+    try {
+      event.preventDefault();
+      if (!tag) {
+        alert("Please select the user type! (Applicant) or (Company)");
+        return;
+      }
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signInWithPassword({
+        email: emailInput,
+        password,
+      });
+      const { access_token } = session;
+      localStorage.setItem("token", access_token);
+      api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+      if (error) {
+        alert(error.message);
+        console.log(error.message);
+        return;
+      }
+      const {
+        data: {
+          user: {
+            birthdate,
+            country,
+            education,
+            language,
+            users: { account_id, email, name, phone, type },
+          },
+          code,
+          message,
+        },
+      } = await api.post(endpoints.USER_SIGN_IN(tag));
+      dispatch(
+        setAuthDataBulk({
+          user: "shared",
+          data: {
+            accountId: account_id,
+            email,
+            type,
+            phone,
+            name,
+          },
+        })
+      );
+      dispatch(
+        setAuthDataBulk({
+          user: tag,
+          data: {
+            nationality: country,
+            location: country,
+            birthdate,
+            language,
+            education,
+            // gender,
+          },
+        })
+      );
+      // need to implement company sign-in case
+      dispatch(setIsLoggedIn({ isLoggedIn: true })); // log the user in
+      navigate("/");
+    } catch (err) {
+      console.log(err.message);
     }
-    const {
-      data: {
-        user: {
-          birthdate,
-          country,
-          education,
-          language,
-          users: { account_id, email, name, phone, type },
-        },
-      },
-    } = await api.post(endpoints.USER_SIGN_IN);
-    dispatch(
-      setAuthDataBulk({
-        user: "shared",
-        data: {
-          accountId: account_id,
-          email,
-          type,
-          phone,
-          name,
-        },
-      })
-    );
-    dispatch(
-      setAuthDataBulk({
-        user: tag,
-        data: {
-          nationality: country,
-          location: country,
-          birthdate,
-          language,
-          education,
-          // gender,
-        },
-      })
-    );
-    // need to implement company sign-in case
-    dispatch(setIsLoggedIn({ isLoggedIn: true })); // log the user in
-    navigate("/");
   }
 
-  useEffect(() => {
-    dispatch(setUserRole(tag));
-  }, []);
+  const handleNavigate = () => {
+    if (!tag) {
+      alert("Please select the user type! (Applicant) or (Company)");
+      return;
+    }
+    navigate(pages.SUPABASE_REGISTER);
+  };
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -177,12 +192,12 @@ function Register() {
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Not a member?{" "}
-            <a
-              href="/supabase-signup"
-              className="font-semibold text-gray-600 hover:text-gray-800"
+            <span
+              onClick={handleNavigate}
+              className="cursor-pointer font-semibold text-gray-600 hover:text-gray-800"
             >
               Sign up
-            </a>
+            </span>
           </p>
         </div>
       </div>

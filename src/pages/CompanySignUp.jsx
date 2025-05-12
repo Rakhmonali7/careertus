@@ -224,7 +224,7 @@ function CompanySignUp() {
           type="text"
           name="company_name"
           value={company_name || ""}
-          onChange={handleChange(registerRole, "company_name")}
+          onChange={handleChange("company", "company_name")}
         />
       </Template>
     ),
@@ -252,7 +252,7 @@ function CompanySignUp() {
           type="text"
           name="industry"
           value={industry || ""}
-          onChange={handleChange(registerRole, "industry")}
+          onChange={handleChange("company", "industry")}
         />
       </Template>
     ),
@@ -280,14 +280,14 @@ function CompanySignUp() {
           type="text"
           name="website"
           value={website || ""}
-          onChange={handleChange(registerRole, "website")}
+          onChange={handleChange("company", "website")}
         />
       </Template>
     ),
     descriptionRegister: () => (
       <Template
         theme="red"
-        title="Enter your company's description"
+        title="Enter job description"
         onSubmit={handleRegisterRole}
         footer={
           <Button
@@ -308,7 +308,7 @@ function CompanySignUp() {
           type="text"
           name="description"
           value={description || ""}
-          onChange={handleChange(registerRole, "description")}
+          onChange={handleChange("company", "description")}
         />
       </Template>
     ),
