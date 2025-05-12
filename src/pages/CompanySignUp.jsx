@@ -12,6 +12,7 @@ import {
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { pages } from "../configs/pages";
 
 const templateStatusEnum = {
   ONE: 0,
@@ -91,7 +92,7 @@ function CompanySignUp() {
       const {
         data: { user },
       } = await api.post(endpoints.REGISTER_ROLE, dataPayload);
-      console.log({ user });
+      console.log({ data });
       let { account_id, email, name: _name, phone: _phone, type: _type } = user;
       dispatch(
         setAuthDataBulk({
@@ -106,7 +107,8 @@ function CompanySignUp() {
         })
       );
       dispatch(setAuthDataBulk({ user: registerRole, data: user }));
-      navigate("/");
+      dispatch(setTemplateStatus(templateStatusEnum.ONE));
+      navigate(pages.JOB_FINAL_EDIT);
     } catch (err) {
       console.log(err.message);
       setAlertMessage(err.message || "Something went wrong.");

@@ -5,21 +5,24 @@ import search from "../assets/search-icon.svg";
 import Button from "../components/Button";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { pages } from "../configs/pages";
 
 function Nav() {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.globalState.isLoggedIn);
   const { accountId } = useSelector((state) => state.globalState.shared);
+  const { registerRole } = useSelector((state) => state.globalState);
   const handleLogin = () => {
     if (isAuthenticated) {
-      navigate("/accountSetting");
+      if (registerRole === "applicant") {
+        navigate(pages.ACCOUNT_SETTING);
+      } else {
+        navigate(pages.JOB_FINAL_EDIT);
+      }
     } else {
       navigate("/register");
     }
   };
-  useEffect(() => {
-    console.log({ isAuthenticated, accountId });
-  });
   return (
     <div className="pt-12 px-50">
       <div className="flex justify-between">

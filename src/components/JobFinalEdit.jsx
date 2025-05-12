@@ -1,46 +1,55 @@
-import React, { useState } from 'react';
-import { Pencil } from 'lucide-react'; // Optional: use any icon library
+import React, { useState } from "react";
+import { Pencil } from "lucide-react"; // Optional: use any icon library
+import { createClient } from "@supabase/supabase-js";
+import { useDispatch } from "react-redux";
+import { handleLogout, resetAuthData } from "../store/reducers/globalReducer";
+import { useNavigate } from "react-router-dom";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const initialData = {
-  applicationMethod: 'Email',
-  requireResume: 'Yes',
-  applicationUpdates: 'Yes',
-  contact: 'kikimki23',
-  phone: '+82-00-0000-0000',
-  companyName: '',
-  companyIndustry: '',
-  source: '',
+  applicationMethod: "Email",
+  requireResume: "Yes",
+  applicationUpdates: "Yes",
+  contact: "kikimki23",
+  phone: "+82-00-0000-0000",
+  companyName: "",
+  companyIndustry: "",
+  source: "",
 };
 const mockData = [
   {
-    id: 'comp123',
-    companyName: 'ABC Corp',
-    name: 'John Doe',
-    email: 'johndoe@gmail.com',
-    phone: '+82-00-0000-0000',
-    resume: 'Resume_Link_ABC_Corp.pdf',
+    id: "comp123",
+    companyName: "ABC Corp",
+    name: "John Doe",
+    email: "johndoe@gmail.com",
+    phone: "+82-00-0000-0000",
+    resume: "Resume_Link_ABC_Corp.pdf",
   },
   {
-    id: 'comp456',
-    companyName: 'XYZ Ltd.',
-    name: 'Mina Lee',
-    email: 'minaleexyz@gmail.com',
-    phone: '+82-00-0000-0000',
-    resume: 'Resume_Link_XYZ_Ltd.pdf',
+    id: "comp456",
+    companyName: "XYZ Ltd.",
+    name: "Mina Lee",
+    email: "minaleexyz@gmail.com",
+    phone: "+82-00-0000-0000",
+    resume: "Resume_Link_XYZ_Ltd.pdf",
   },
   {
-    id: 'comp789',
-    companyName: 'Tech Innovations',
-    name: 'James Park',
-    email: 'jamespark@techinnovations.com',
-    phone: '+82-00-0000-0000',
-    resume: 'Resume_Link_Tech_Innovations.pdf',
+    id: "comp789",
+    companyName: "Tech Innovations",
+    name: "James Park",
+    email: "jamespark@techinnovations.com",
+    phone: "+82-00-0000-0000",
+    resume: "Resume_Link_Tech_Innovations.pdf",
   },
 ];
 
 const EditableField = ({ label, field, value, onSave }) => {
   const [editing, setEditing] = useState(false);
-  const [tempValue, setTempValue] = useState(value || '');
+  const [tempValue, setTempValue] = useState(value || "");
 
   const save = () => {
     setEditing(false);
@@ -56,18 +65,18 @@ const EditableField = ({ label, field, value, onSave }) => {
             type="text"
             className="border border-gray-300 px-2 py-1 rounded w-full text-sm"
             value={tempValue}
-            onChange={e => setTempValue(e.target.value)}
+            onChange={(e) => setTempValue(e.target.value)}
             onBlur={save}
-            onKeyDown={e => e.key === 'Enter' && save()}
+            onKeyDown={(e) => e.key === "Enter" && save()}
             autoFocus
           />
         ) : (
-          <span className="text-gray-700 text-sm">{value || '-'}</span>
+          <span className="text-gray-700 text-sm">{value || "-"}</span>
         )}
         <button
           className="ml-2 text-gray-500 hover:text-gray-800"
           onClick={() => {
-            setTempValue(value || '');
+            setTempValue(value || "");
             setEditing(true);
           }}
         >
@@ -80,6 +89,24 @@ const EditableField = ({ label, field, value, onSave }) => {
 
 export default function JobFinalEdit() {
   const [formData, setFormData] = useState(initialData);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.log("Logout issue!", error.message);
+        return;
+      }
+      dispatch(handleLogout());
+      dispatch(resetAuthData({ user: "shared" }));
+      dispatch(resetAuthData({ user: "company" }));
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const updateField = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -156,7 +183,7 @@ export default function JobFinalEdit() {
               </tr>
             </thead>
             <tbody>
-              {mockData.map(applicant => (
+              {mockData.map((applicant) => (
                 <tr key={applicant.id} className="text-center">
                   <td className="border px-4 py-2">{applicant.name}</td>
                   <td className="border px-4 py-2">{applicant.email}</td>
@@ -170,11 +197,14 @@ export default function JobFinalEdit() {
       </div>
 
       <div className="flex justify-between mt-6">
-        <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
-          Back
+        <button
+          onClick={logoutHandler}
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          Logout
         </button>
         <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-          Continue
+          Main page
         </button>
       </div>
     </div>
