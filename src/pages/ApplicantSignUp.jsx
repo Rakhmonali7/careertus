@@ -95,11 +95,17 @@ function ApplicantSignUp() {
         data: { user },
       } = await api.post(endpoints.REGISTER_ROLE, dataPayload);
       console.log({ user });
-      let { account_id, email, name, phone, type } = user;
+      let { account_id, email, name: _name, phone: _phone, type: _type } = user;
       dispatch(
         setAuthDataBulk({
           user: "shared",
-          data: { accountId: account_id, email, name, phone, type },
+          data: {
+            accountId: account_id,
+            email,
+            name: _name,
+            phone: _phone,
+            type: _type,
+          },
         })
       );
       dispatch(setAuthDataBulk({ user: registerRole, data: user }));
