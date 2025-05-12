@@ -1,36 +1,36 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoggedIn: true,
-  registerRole: 'applicant',
+  isLoggedIn: false,
+  registerRole: "",
   templateStatus: 0,
   shared: {
-    accountId: '',
-    email: '',
-    password: '',
-    confirmPw: '',
-    name: '',
+    accountId: "",
+    email: "",
+    password: "",
+    confirmPw: "",
+    name: "",
     phone: null,
-    type: 'applicant',
+    type: "",
   },
   applicant: {
-    nationality: '',
-    gender: '',
-    location: '',
-    birthdate: '',
-    language: '',
-    education: '',
+    nationality: "",
+    gender: "",
+    location: "",
+    birthdate: "",
+    language: "",
+    education: "",
   },
   company: {
-    company_name: '',
-    industry: '',
-    website: '',
-    description: '',
+    company_name: "",
+    industry: "",
+    website: "",
+    description: "",
   },
 };
 
 const globalSlice = createSlice({
-  name: 'globalState',
+  name: "globalState",
   initialState,
   reducers: {
     setIsLoggedIn: (state, action) => {
