@@ -11,6 +11,32 @@ const initialData = {
   companyIndustry: '',
   source: '',
 };
+const mockData = [
+  {
+    id: 'comp123',
+    companyName: 'ABC Corp',
+    name: 'John Doe',
+    email: 'johndoe@gmail.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_ABC_Corp.pdf',
+  },
+  {
+    id: 'comp456',
+    companyName: 'XYZ Ltd.',
+    name: 'Mina Lee',
+    email: 'minaleexyz@gmail.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_XYZ_Ltd.pdf',
+  },
+  {
+    id: 'comp789',
+    companyName: 'Tech Innovations',
+    name: 'James Park',
+    email: 'jamespark@techinnovations.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_Tech_Innovations.pdf',
+  },
+];
 
 const EditableField = ({ label, field, value, onSave }) => {
   const [editing, setEditing] = useState(false);
@@ -60,7 +86,7 @@ export default function JobFinalEdit() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
       <h2 className="text-xl font-semibold mb-4">Settings</h2>
 
       <EditableField
@@ -114,6 +140,34 @@ export default function JobFinalEdit() {
         value={formData.source}
         onSave={updateField}
       />
+
+      <div className="mt-6">
+        <label className="block font-medium text-gray-700 mb-2">
+          Applied Positions
+        </label>
+        <div className="flex-1 border rounded-lg shadow bg-white overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-2">Applicant Name</th>
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Phone number</th>
+                <th className="px-4 py-2">Resume</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mockData.map(applicant => (
+                <tr key={applicant.id} className="text-center">
+                  <td className="border px-4 py-2">{applicant.name}</td>
+                  <td className="border px-4 py-2">{applicant.email}</td>
+                  <td className="border px-4 py-2">{applicant.phone}</td>
+                  <td className="border px-4 py-2">{applicant.resume}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="flex justify-between mt-6">
         <button className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
