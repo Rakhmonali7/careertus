@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import Template from "../components/Template";
 import Input from "../components/Input";
-import { Button, ConfigProvider, Flex } from "antd";
+import { Button } from "antd";
+import { DatePicker, Select } from "antd";
+import dayjs from "dayjs";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
 import {
   setTemplateStatus,
   setAuthData,
   resetAuthData,
+  setAuthDataBulk,
 } from "../store/reducers/globalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { pages } from "../configs/pages";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const templateStatusEnum = {
   ONE: 0,
@@ -27,10 +32,9 @@ const templateStatusEnum = {
 
 function ApplicantSignUp() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [alertMessage, setAlertMessage] = useState("");
 
-  const dispatch = useDispatch();
   const templateStatus = useSelector(
     (state) => state.globalState.templateStatus
   );
@@ -43,7 +47,6 @@ function ApplicantSignUp() {
     (state) => state.globalState
   );
 
-  // hof
   const handleChange = (user, key) => (value) => {
     dispatch(setAuthData({ user, key, value }));
   };
@@ -57,29 +60,24 @@ function ApplicantSignUp() {
     e.preventDefault();
     try {
       for (let [key, value] of Object.entries(shared)) {
-        if (
-          key === "email" ||
-          key === "password" ||
-          key === "confirmPw" ||
-          key === "type"
-        )
-          continue;
-        if (value === "" || value === null) {
+        if (["email", "password", "confirmPw", "type"].includes(key)) continue;
+        if (!value) {
           setAlertMessage(`${key} is missing!`);
           return;
         }
       }
       for (let [key, value] of Object.entries(applicant)) {
-        if (value === "" || value === null) {
+        if (!value) {
           setAlertMessage(`${key} is missing!`);
           return;
         }
       }
-      if (registerRole === "" || registerRole === null) {
+      if (!registerRole) {
         setAlertMessage(`User role is missing!`);
         return;
       }
-      const data = {
+
+      const dataPayload = {
         type: "applicant",
         account_id: accountId,
         name,
@@ -93,11 +91,18 @@ function ApplicantSignUp() {
       api.defaults.headers.common["Authorization"] = token
         ? `Bearer ${token}`
         : "";
-      const response = await api.post(endpoints.REGISTER_ROLE, data);
-      console.log({ response });
-
-      dispatch(resetAuthData({ user: "shared" }));
-      dispatch(resetAuthData({ user: registerRole }));
+      const {
+        data: { user },
+      } = await api.post(endpoints.REGISTER_ROLE, dataPayload);
+      console.log({ user });
+      let { account_id, email, name, phone, type } = user;
+      dispatch(
+        setAuthDataBulk({
+          user: "shared",
+          data: { accountId: account_id, email, name, phone, type },
+        })
+      );
+      dispatch(setAuthDataBulk({ user: registerRole, data: user }));
       dispatch(setTemplateStatus(templateStatusEnum.ONE));
       navigate(pages.ACCOUNT_SETTING);
     } catch (err) {
@@ -112,18 +117,13 @@ function ApplicantSignUp() {
         title="Enter a new account id"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.TWO)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
           placeholder="Account Id"
@@ -139,18 +139,13 @@ function ApplicantSignUp() {
         title="Enter your fullname"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.THREE)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
           placeholder="Full Name"
@@ -166,25 +161,22 @@ function ApplicantSignUp() {
         title="Enter your phone number"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FOUR)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
-        <Input
-          placeholder="Phone number"
-          type="number"
-          name="phone"
+        <PhoneInput
+          country={"kr"}
           value={phone || ""}
-          onChange={handleChange("shared", "phone")}
+          onChange={(value) =>
+            dispatch(setAuthData({ user: "shared", key: "phone", value }))
+          }
+          inputStyle={{ width: "100%" }}
+          specialLabel=""
         />
       </Template>
     ),
@@ -193,21 +185,16 @@ function ApplicantSignUp() {
         title="Enter your preferred language"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.FIVE)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
-          placeholder="language"
+          placeholder="Language"
           type="text"
           name="language"
           value={language || ""}
@@ -220,18 +207,13 @@ function ApplicantSignUp() {
         title="Enter your education"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SIX)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
           placeholder="Education"
@@ -247,18 +229,13 @@ function ApplicantSignUp() {
         title="Enter your nationality"
         onSubmit={(e) => handleForwardTemplate(e, templateStatusEnum.SEVEN)}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
           placeholder="Nationality"
@@ -287,12 +264,16 @@ function ApplicantSignUp() {
         {alertMessage && (
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
-        <Input
-          placeholder="Birthday"
-          type="text"
-          name="birthdate"
-          value={birthdate || ""}
-          onChange={handleChange("applicant", "birthdate")}
+        <DatePicker
+          style={{ width: "100%" }}
+          placeholder="Select birthdate"
+          value={birthdate ? dayjs(birthdate) : null}
+          onChange={(date) =>
+            handleChange(
+              "applicant",
+              "birthdate"
+            )(date ? date.format("YYYY-MM-DD") : "")
+          }
         />
       </Template>
     ),
@@ -314,13 +295,16 @@ function ApplicantSignUp() {
         {alertMessage && (
           <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
         )}
-        <Input
-          placeholder="Gender"
-          type="text"
-          name="gender"
-          value={gender || ""}
+        <Select
+          placeholder="Select your gender"
+          value={gender || undefined}
           onChange={handleChange("applicant", "gender")}
-        />
+          style={{ width: "100%" }}
+        >
+          <Select.Option value="Male">Male</Select.Option>
+          <Select.Option value="Female">Female</Select.Option>
+          <Select.Option value="Other">Other</Select.Option>
+        </Select>
       </Template>
     ),
     locationRegister: () => (
@@ -328,18 +312,13 @@ function ApplicantSignUp() {
         title="Enter your area of residence"
         onSubmit={handleRegisterRole}
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="default"
-            variant="solid"
-          >
+          <Button htmlType="submit" size="large">
             Continue
           </Button>
         }
       >
         {alertMessage && (
-          <div className="text-red-500 text-sm font-medium">{alertMessage}</div>
+          <div className="text-red-500 text-sm">{alertMessage}</div>
         )}
         <Input
           placeholder="Area of residence"

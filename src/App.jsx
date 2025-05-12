@@ -3,8 +3,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Layout from "./pages/Layout";
-import { useDispatch } from "react-redux";
-import { setIsLoggedIn } from "./store/reducers/globalReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthDataBulk, setIsLoggedIn } from "./store/reducers/globalReducer";
+import api from "./configs/config";
+import { endpoints } from "./configs/endpoints";
 
 const supabase = createClient(
   "https://sqcjbblyhcobumfrfgik.supabase.co",
@@ -14,7 +16,26 @@ const supabase = createClient(
 const App = () => {
   const dispatch = useDispatch();
   const [_, setSession] = useState(null);
+  const { registerRole } = useSelector((state) => state.globalState);
+  const queryAndSetUserInfo = async () => {
+    try {
+      const {
+        data: { user },
+      } = await api.get(endpoints.USER_INFO(registerRole));
+      let { account_id, email, name, phone, type } = user;
+      dispatch(
+        setAuthDataBulk({
+          user: "shared",
+          data: { accountId: account_id, email, name, phone, type },
+        })
+      );
+      dispatch(setAuthDataBulk({ user: registerRole, data: user }));
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   useEffect(() => {
+    queryAndSetUserInfo();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
