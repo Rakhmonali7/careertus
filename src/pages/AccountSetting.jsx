@@ -23,6 +23,28 @@ const fieldLabels = {
   country: 'Country',
 };
 
+// job application mockData
+const mockData = [
+  {
+    id: 'id23435',
+    name: 'LG Electronics',
+    positionName: 'HR Manager',
+    email: 'lg123@gmail.com',
+  },
+  {
+    id: 'id235',
+    name: 'Samsung ',
+    positionName: 'AI Engineer',
+    email: 'samsung123@gmail.com',
+  },
+  {
+    id: 'id2335',
+    name: 'CompanyName',
+    positionName: 'PositionName',
+    email: 'minakim34@gmail.com',
+  },
+];
+
 const EditableField = ({ label, field, value, editable, onSave }) => {
   const [editing, setEditing] = useState(false);
   const [tempValue, setTempValue] = useState(value || '');
@@ -129,6 +151,31 @@ export default function AccountSetting() {
           {resume && (
             <span className="text-sm text-gray-600">{resume.name}</span>
           )}
+        </div>
+      </div>
+      <div className="mt-6">
+        <label className="block font-medium text-gray-700 mb-2">
+          Applied Positions
+        </label>
+        <div className="flex-1 border rounded-lg shadow bg-white overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-2">Company Name</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mockData.map(company => (
+                <tr key={company.id} className="text-center">
+                  <td className="border px-4 py-2">{company.name}</td>
+                  <td className="border px-4 py-2">{company.positionName}</td>
+                  <td className="border px-4 py-2">{company.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
