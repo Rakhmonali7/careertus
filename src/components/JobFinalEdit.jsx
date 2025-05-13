@@ -199,11 +199,11 @@ export default function JobFinalEdit() {
       <div className="flex justify-between mt-6">
         <button
           onClick={logoutHandler}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="cursor-pointer px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
         >
           Logout
         </button>
-        <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <button onClick={() => navigate('/')} className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
           Main page
         </button>
       </div>
