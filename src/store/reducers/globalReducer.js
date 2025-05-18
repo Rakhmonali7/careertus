@@ -27,6 +27,22 @@ const initialState = {
     website: "",
     description: "",
   },
+  job: {
+    title: "",
+    description: "",
+    location: "",
+    job_type: "",
+    experience_lvl: "",
+    wage_min: "",
+    wage_max: "",
+    rate: "per year",
+    currency: "USD",
+    company_id: "",
+    resume_required: true,
+    allow_email_contact: true,
+    encourage_criminal_record: false,
+    require_background_check: false,
+  },
 };
 
 const globalSlice = createSlice({
@@ -35,6 +51,10 @@ const globalSlice = createSlice({
   reducers: {
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload.isLoggedIn;
+    },
+    setJobData: (state, action) => {
+      const { key, value } = action.payload;
+      state.job[key] = value;
     },
     setAuthData: (state, action) => {
       const { user, key, value } = action.payload;
@@ -77,5 +97,6 @@ export const {
   resetAuthData,
   setAuthDataBulk,
   handleLogout,
+  setJobData,
 } = globalSlice.actions;
 export default globalSlice.reducer;

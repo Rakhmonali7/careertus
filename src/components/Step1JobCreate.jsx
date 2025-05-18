@@ -1,65 +1,68 @@
-import { useState } from 'react';
-import CustomButton from '../components/Button';
+import { useState } from "react";
+import CustomButton from "../components/Button";
+import { useDispatch } from "react-redux";
+import { setJobData } from "../store/reducers/globalReducer";
 
 const jobTypeOptions = [
-  'full-time',
-  'part-time',
-  'internship',
-  'contract',
-  'temporary',
-  'volunteer',
-  'permanent',
+  "full-time",
+  "part-time",
+  "internship",
+  "contract",
+  "temporary",
+  "volunteer",
+  "permanent",
 ];
 
 const experienceOptions = [
-  'no-experience',
-  'under 1 year',
-  'entry-level',
-  'mid-level',
-  'senior-level',
-  '1 year',
-  '2 years',
-  '3 years',
-  '4+ years',
-  'other',
+  "no-experience",
+  "under 1 year",
+  "entry-level",
+  "mid-level",
+  "senior-level",
+  "1 year",
+  "2 years",
+  "3 years",
+  "4+ years",
+  "other",
 ];
 
 function Step1JobCreate() {
+  const dispatch = useDispatch();
   const [selectedOptions, setSelectedOptions] = useState({
     jobType: [],
     experience: [],
   });
 
-  const toggleJobType = value => {
-    setSelectedOptions(prev => {
+  const toggleJobType = (value) => {
+    setSelectedOptions((prev) => {
       const isSelected = prev.jobType.includes(value);
       const updated = isSelected
-        ? prev.jobType.filter(item => item !== value)
+        ? prev.jobType.filter((item) => item !== value)
         : [...prev.jobType, value];
+      dispatch(setJobData({ job_type: updated }));
       return { ...prev, jobType: updated };
     });
   };
 
-  const selectExperience = value => {
-    setSelectedOptions(prev => ({
+  const selectExperience = (value) => {
+    setSelectedOptions((prev) => ({
       ...prev,
       experience: [value], // allow only one
     }));
+    dispatch(setJobData({ experience_lvl: value }));
   };
-
-  console.log('Selected Options:', selectedOptions);
 
   return (
     <div>
       <div className="mb-6">
         <h2>Job Type</h2>
         <div className="flex flex-wrap gap-2 my-4">
-          {jobTypeOptions.map(type => (
+          {jobTypeOptions.map((type) => (
             <CustomButton
               key={type}
               name={type}
-              theme={selectedOptions.jobType.includes(type) ? 'red' : 'gray'}
-              onClick={e => {
+              theme={selectedOptions.jobType.includes(type) ? "red" : "gray"}
+              onClick={(e) => {
                 e.preventDefault();
                 toggleJobType(type);
               }}
@@ -70,12 +73,12 @@ function Step1JobCreate() {
       <div>
         <h2>Experience</h2>
         <div className="flex flex-wrap gap-2 mt-4">
-          {experienceOptions.map(exp => (
+          {experienceOptions.map((exp) => (
             <CustomButton
               key={exp}
               name={exp}
-              theme={selectedOptions.experience.includes(exp) ? 'red' : 'gray'}
-              onClick={e => {
+              theme={selectedOptions.experience.includes(exp) ? "red" : "gray"}
+              onClick={(e) => {
                 e.preventDefault();
                 selectExperience(exp);
               }}

@@ -1,32 +1,43 @@
-import { Select } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Select } from "antd";
+import { useDispatch } from "react-redux";
+import { setJobData } from "../store/reducers/globalReducer";
+import { DownOutlined } from "@ant-design/icons";
 
 const options = [
-  { value: 'Resume is required', label: 'Resume is required' },
   {
-    value:
-      'Let potential candidates contact you about this job by email to the address provided',
+    value: "resume_required",
+    label: "Resume is required",
+  },
+  {
+    value: "allow_email_contact",
     label:
-      'Let potential candidates contact you about this job by email to the address provided',
+      "Let potential candidates contact you about this job by email to the address provided",
   },
   {
-    value: 'People with a criminal records are encouraged to apply',
-    label: 'People with a criminal records are encouraged to apply',
+    value: "encourage_criminal_record",
+    label: "People with a criminal records are encouraged to apply",
   },
   {
-    value: 'This job requires a background check',
-    label: 'This job requires a background check',
+    value: "require_background_check",
+    label: "This job requires a background check",
   },
 ];
 
 function Step2JobCreate() {
+  const dispatch = useDispatch();
+
+  function handleChange(key) {
+    console.log({ key });
+    dispatch(setJobData({ [key[0]]: true }));
+  }
   return (
     <div>
       <Select
         mode="tags"
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
         placeholder="Choose preferences"
         options={options}
+        onChange={handleChange}
       />
     </div>
   );

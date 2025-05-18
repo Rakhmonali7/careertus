@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setJobData } from "../store/reducers/globalReducer";
 
 const currencySymbols = {
-  USD: '$',
-  EUR: '€',
-  KRW: '₩',
-  GBP: '£',
+  USD: "$",
+  EUR: "€",
+  KRW: "₩",
+  GBP: "£",
 };
 
 const currencies = Object.keys(currencySymbols);
-const rates = ['per hour', 'per day', 'per week', 'per month', 'per year'];
+const rates = ["per hour", "per day", "per week", "per month", "per year"];
 
 export default function SalaryRangeSelector() {
-  const [currency, setCurrency] = useState('USD');
-  const [min, setMin] = useState('');
-  const [max, setMax] = useState('');
-  const [rate, setRate] = useState('per year');
+  const dispatch = useDispatch();
+  const { wage_max, wage_min, rate, currency } = useSelector(
+    (state) => state.globalState.job
+  );
 
-  const symbol = currencySymbols[currency] || '$';
+  const symbol = currencySymbols[currency] || "$";
 
   return (
     <div className="flex items-end gap-2 flex-wrap ">
@@ -24,10 +26,10 @@ export default function SalaryRangeSelector() {
       <div>
         <select
           value={currency}
-          onChange={e => setCurrency(e.target.value)}
+          onChange={(e) => dispatch(setJobData({ currency: e.target.value }))}
           className="border rounded-full pl-2 py-2 focus:outline-none"
         >
-          {currencies.map(cur => (
+          {currencies.map((cur) => (
             <option key={cur} value={cur}>
               {cur}
             </option>
@@ -44,8 +46,8 @@ export default function SalaryRangeSelector() {
           </span>
           <input
             type="number"
-            value={min}
-            onChange={e => setMin(e.target.value)}
+            value={wage_min}
+            onChange={(e) => dispatch(setJobData({ wage_min: e.target.value }))}
             className="border rounded-full pl-8 pr-4 py-1.5 w-30 focus:outline-none"
           />
         </div>
@@ -62,8 +64,8 @@ export default function SalaryRangeSelector() {
           </span>
           <input
             type="number"
-            value={max}
-            onChange={e => setMax(e.target.value)}
+            value={wage_max}
+            onChange={(e) => dispatch(setJobData({ wage_max: e.target.value }))}
             className="border rounded-full pl-8 pr-4 py-1.5 w-30 focus:outline-none"
           />
         </div>
@@ -74,10 +76,10 @@ export default function SalaryRangeSelector() {
         <label className="text-sm mb-1">Rate</label>
         <select
           value={rate}
-          onChange={e => setRate(e.target.value)}
+          onChange={(e) => dispatch(setJobData({ rate: e.target.value }))}
           className="border rounded-full pl-4 py-2 focus:outline-none"
         >
-          {rates.map(r => (
+          {rates.map((r) => (
             <option key={r} value={r}>
               {r}
             </option>

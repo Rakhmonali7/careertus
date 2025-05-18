@@ -1,13 +1,18 @@
-import Template from '../components/Template';
-import Step1JobCreate from '../components/Step1JobCreate';
-import Step2JobCreate from '../components/Step2JobCreate';
-import Step3JobCreate from '../components/Step3JobCreate';
-import Step4JobCreate from '../components/Step4JobCreate';
+import Template from "../components/Template";
+import Step1JobCreate from "../components/Step1JobCreate";
+import Step2JobCreate from "../components/Step2JobCreate";
+import Step3JobCreate from "../components/Step3JobCreate";
+import Step4JobCreate from "../components/Step4JobCreate";
 
-import { Button } from 'antd';
-import { useState } from 'react';
+import { Button } from "antd";
+import { useState } from "react";
+import Step0JobCreate from "../components/Step0JobCreate";
+import api from "../configs/config";
+import { endpoints } from "../configs/endpoints";
+import { useSelector } from "react-redux";
 
 const stepComponents = [
+  Step0JobCreate,
   Step1JobCreate,
   Step2JobCreate,
   Step3JobCreate,
@@ -16,7 +21,18 @@ const stepComponents = [
 
 function CompanyJobPost() {
   const [step, setStep] = useState(0);
+  const { job } = useSelector((state) => state.globalState);
   const StepComponent = stepComponents[step];
+
+  async function handleContinue(e) {
+    e.preventDefault();
+    setStep((prev) => Math.min(prev + 1, stepComponents.length - 1));
+    if (step >= stepComponents.length - 1) {
+      // const data = {...job, company_id: user_uuid }
+      // need to include user_uuid field in the global store
+      const response = await api.post(endpoints.JOB_POST);
+    }
+  }
 
   return (
     <div>
@@ -29,11 +45,7 @@ function CompanyJobPost() {
             size="large"
             color="danger"
             variant="solid"
-            onClick={e => {
-              e.preventDefault();
-              setStep(prev => Math.min(prev + 1, stepComponents.length - 1));
-            }}
-            disabled={step >= stepComponents.length - 1}
+            onClick={handleContinue}
           >
             Continue
           </Button>
