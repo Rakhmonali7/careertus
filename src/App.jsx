@@ -22,11 +22,18 @@ const App = () => {
       const {
         data: { user },
       } = await api.get(endpoints.USER_INFO(registerRole));
-      let { account_id, email, name, phone, type } = user;
+      let { account_id, email, name, phone, type, user_id } = user;
       dispatch(
         setAuthDataBulk({
           user: "shared",
-          data: { accountId: account_id, email, name, phone, type },
+          data: {
+            accountId: account_id,
+            email,
+            name,
+            phone,
+            type,
+            user_uuid: user_id,
+          },
         })
       );
       dispatch(setAuthDataBulk({ user: registerRole, data: user }));

@@ -5,6 +5,7 @@ const initialState = {
   registerRole: "",
   templateStatus: 0,
   shared: {
+    user_uuid: "",
     accountId: "",
     email: "",
     password: "",

@@ -57,6 +57,7 @@ function Register() {
       const {
         data: {
           user: {
+            user_id,
             birthdate,
             country,
             education,
@@ -71,6 +72,7 @@ function Register() {
         setAuthDataBulk({
           user: "shared",
           data: {
+            user_uuid: user_id,
             accountId: account_id,
             email,
             type,

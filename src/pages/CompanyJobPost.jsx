@@ -22,15 +22,17 @@ const stepComponents = [
 function CompanyJobPost() {
   const [step, setStep] = useState(0);
   const { job } = useSelector((state) => state.globalState);
+  const { user_uuid } = useSelector((state) => state.globalState.shared);
   const StepComponent = stepComponents[step];
 
   async function handleContinue(e) {
     e.preventDefault();
     setStep((prev) => Math.min(prev + 1, stepComponents.length - 1));
     if (step >= stepComponents.length - 1) {
-      // const data = {...job, company_id: user_uuid }
+      const data = { ...job, company_id: user_uuid };
       // need to include user_uuid field in the global store
       const response = await api.post(endpoints.JOB_POST);
+      console.log({ response });
     }
   }
 
