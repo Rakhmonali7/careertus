@@ -28,7 +28,7 @@ function Step2JobCreate() {
 
   function handleChange(key) {
     console.log({ key });
-    dispatch(setJobData({ [key[0]]: true }));
+    dispatch(setJobData({ key: key[0], value: true }));
   }
   return (
     <div>

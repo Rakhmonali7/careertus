@@ -44,6 +44,7 @@ const initialState = {
     encourage_criminal_record: false,
     require_background_check: false,
   },
+  jobs: [],
 };
 
 const globalSlice = createSlice({
@@ -56,6 +57,12 @@ const globalSlice = createSlice({
     setJobData: (state, action) => {
       const { key, value } = action.payload;
       state.job[key] = value;
+    },
+    setFetchedJobs: (state, action) => {
+      state.jobs = action.payload;
+    },
+    resetFetchedJobs: (state) => {
+      state.jobs = [];
     },
     setAuthData: (state, action) => {
       const { user, key, value } = action.payload;
@@ -82,6 +89,9 @@ const globalSlice = createSlice({
       state[user] = initialState[user];
       state.templateStatus = 0;
     },
+    resetJobData: (state) => {
+      state.job = initialState.job;
+    },
     handleLogout: (state) => {
       state.isLoggedIn = false;
       state.registerRole = initialState.registerRole;
@@ -96,8 +106,11 @@ export const {
   setTemplateStatus,
   setAuthData,
   resetAuthData,
+  resetJobData,
   setAuthDataBulk,
   handleLogout,
   setJobData,
+  setFetchedJobs,
+  resetFetchedJobs,
 } = globalSlice.actions;
 export default globalSlice.reducer;

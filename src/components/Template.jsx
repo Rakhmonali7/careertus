@@ -20,7 +20,7 @@ function Template({ title = "Sign up", children, onSubmit, footer, theme }) {
           </div>
           <div className="flex flex-col gap-6 mt-6">{children}</div>
 
-          {footer && <div className="mt-4 self-end">{footer}</div>}
+          {footer && <div className="flex justify-between">{footer}</div>}
         </form>
       </div>
     );

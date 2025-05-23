@@ -16,7 +16,9 @@ export default function RichTextEditor() {
   const handleInput = () => {
     setContent(editorRef.current.innerHTML);
     console.log({ value: editorRef.current.innerHTML });
-    dispatch(setJobData({ description: editorRef.current.innerHTML }));
+    dispatch(
+      setJobData({ key: "description", value: editorRef.current.innerHTML })
+    );
   };
 
   const debounced = useDebouncedCallback(handleInput, 500);

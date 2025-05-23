@@ -3,22 +3,22 @@ import { useDispatch } from "react-redux";
 import { setJobData } from "../store/reducers/globalReducer";
 import { useDebouncedCallback } from "use-debounce";
 
-function Step0JobCreate() {
+function Step5JobCreate() {
   const dispatch = useDispatch();
 
   const debounced = useDebouncedCallback((e) => {
     const { value } = e.target;
-    dispatch(setJobData({ key: "title", value: value }));
+    dispatch(setJobData({ key: "location", value: value }));
   }, 300);
 
   return (
     <Input
-      placeholder="Job title"
+      placeholder="Job location"
       type="text"
-      name="title"
+      name="location"
       onChange={debounced}
     />
   );
 }
 
-export default Step0JobCreate;
+export default Step5JobCreate;

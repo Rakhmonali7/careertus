@@ -26,7 +26,11 @@ export default function SalaryRangeSelector() {
       <div>
         <select
           value={currency}
-          onChange={(e) => dispatch(setJobData({ currency: e.target.value }))}
+          onChange={(e) =>
+            dispatch(
+              setJobData({ key: "currency", value: e.target.value || currency })
+            )
+          }
           className="border rounded-full pl-2 py-2 focus:outline-none"
         >
           {currencies.map((cur) => (
@@ -47,7 +51,9 @@ export default function SalaryRangeSelector() {
           <input
             type="number"
             value={wage_min}
-            onChange={(e) => dispatch(setJobData({ wage_min: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setJobData({ key: "wage_min", value: e.target.value }))
+            }
             className="border rounded-full pl-8 pr-4 py-1.5 w-30 focus:outline-none"
           />
         </div>
@@ -65,7 +71,9 @@ export default function SalaryRangeSelector() {
           <input
             type="number"
             value={wage_max}
-            onChange={(e) => dispatch(setJobData({ wage_max: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setJobData({ key: "wage_max", value: e.target.value }))
+            }
             className="border rounded-full pl-8 pr-4 py-1.5 w-30 focus:outline-none"
           />
         </div>
@@ -76,7 +84,9 @@ export default function SalaryRangeSelector() {
         <label className="text-sm mb-1">Rate</label>
         <select
           value={rate}
-          onChange={(e) => dispatch(setJobData({ rate: e.target.value }))}
+          onChange={(e) =>
+            dispatch(setJobData({ key: "rate", value: e.target.value }))
+          }
           className="border rounded-full pl-4 py-2 focus:outline-none"
         >
           {rates.map((r) => (

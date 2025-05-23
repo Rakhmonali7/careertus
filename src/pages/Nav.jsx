@@ -31,6 +31,12 @@ function Nav() {
         </div>
         <div>
           <div className="flex justify-between items-center gap-5">
+            {registerRole === "company" && (
+              <Button
+                name="Post a job"
+                onClick={() => navigate(pages.COMPANY_JOB_POST)}
+              />
+            )}
             <Button
               name={`${isAuthenticated ? accountId : "Log in"}`}
               onClick={handleLogin}

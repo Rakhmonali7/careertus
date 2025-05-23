@@ -39,7 +39,8 @@ function Step1JobCreate() {
       const updated = isSelected
         ? prev.jobType.filter((item) => item !== value)
         : [...prev.jobType, value];
-      dispatch(setJobData({ job_type: updated }));
+
+      dispatch(setJobData({ key: "job_type", value: updated.join(", ") }));
       return { ...prev, jobType: updated };
     });
   };
@@ -49,7 +50,7 @@ function Step1JobCreate() {
       ...prev,
       experience: [value], // allow only one
     }));
-    dispatch(setJobData({ experience_lvl: value }));
+    dispatch(setJobData({ key: "experience_lvl", value: value }));
   };
 
   return (

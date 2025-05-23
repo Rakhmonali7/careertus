@@ -9,7 +9,11 @@ import { useState } from "react";
 import Step0JobCreate from "../components/Step0JobCreate";
 import api from "../configs/config";
 import { endpoints } from "../configs/endpoints";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { pages } from "../configs/pages";
+import { resetJobData } from "../store/reducers/globalReducer";
+import Step5JobCreate from "../components/Step5JobCreate";
 
 const stepComponents = [
   Step0JobCreate,
@@ -17,23 +21,42 @@ const stepComponents = [
   Step2JobCreate,
   Step3JobCreate,
   Step4JobCreate,
+  Step5JobCreate,
 ];
 
 function CompanyJobPost() {
   const [step, setStep] = useState(0);
-  const { job } = useSelector((state) => state.globalState);
+  const { job, shared } = useSelector((state) => state.globalState);
   const { user_uuid } = useSelector((state) => state.globalState.shared);
   const StepComponent = stepComponents[step];
 
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   async function handleContinue(e) {
     e.preventDefault();
-    setStep((prev) => Math.min(prev + 1, stepComponents.length - 1));
-    if (step >= stepComponents.length - 1) {
-      const data = { ...job, company_id: user_uuid };
-      // need to include user_uuid field in the global store
-      const response = await api.post(endpoints.JOB_POST);
-      console.log({ response });
+    try {
+      setStep((prev) => Math.min(prev + 1, stepComponents.length - 1));
+      if (step >= stepComponents.length - 1) {
+        const data = {
+          ...job,
+          company_id: user_uuid,
+          contact_number: shared?.phone,
+        };
+        await api.post(endpoints.JOB_POST, data);
+        dispatch(resetJobData());
+        navigate(pages.MAIN);
+      }
+    } catch (err) {
+      console.log("Unexpected error", err.message);
+      alert(err.message);
     }
+  }
+
+  function handleGoBack(e) {
+    e.preventDefault();
+    setStep((prev) => Math.min(prev - 1, stepComponents.length - 1));
   }
 
   return (
@@ -42,15 +65,26 @@ function CompanyJobPost() {
         title="Add Job Details"
         theme="red"
         footer={
-          <Button
-            htmlType="submit"
-            size="large"
-            color="danger"
-            variant="solid"
-            onClick={handleContinue}
-          >
-            Continue
-          </Button>
+          <>
+            <Button
+              className={`${step === 0 && "invisible"}`}
+              htmlType="submit"
+              size="large"
+              variant="solid"
+              onClick={handleGoBack}
+            >
+              Go Back
+            </Button>
+            <Button
+              htmlType="submit"
+              size="large"
+              color="danger"
+              variant="solid"
+              onClick={handleContinue}
+            >
+              Continue
+            </Button>
+          </>
         }
       >
         <StepComponent key={step} />
