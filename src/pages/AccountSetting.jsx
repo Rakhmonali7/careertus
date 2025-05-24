@@ -111,21 +111,39 @@ export default function AccountSetting() {
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleResumeUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleResumeUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    if (file.type !== "application/pdf") {
-      alert("Only PDF files are allowed.");
-      return;
+      if (
+        file.type === "application/pdf" ||
+        file.type === "application/msword" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert("File must be smaller than 5MB.");
+          return;
+        }
+        setResume(file);
+
+        const formData = new FormData();
+        formData.append("resume", file);
+        const response = await api.post(endpoints.RESUME_UPLOAD, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log({ response });
+      } else {
+        alert("Only PDF files are allowed.");
+        return;
+      }
+    } catch (err) {
+      console.log(err.message);
+      alert(err.message);
     }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert("File must be smaller than 15MB.");
-      return;
-    }
-
-    setResume(file);
   };
 
   const logoutHandler = async () => {

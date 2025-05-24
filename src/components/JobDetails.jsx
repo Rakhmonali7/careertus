@@ -3,6 +3,10 @@ import dollarIcon from "../assets/dollar-sign.svg";
 import { Modal } from "antd";
 import Button from "./Button";
 import { useState } from "react";
+import JobApplicationModal from "./JobApplicationModal";
+import api from "../configs/config";
+import { endpoints } from "../configs/endpoints";
+import { useSelector } from "react-redux";
 
 const currencySymbols = {
   USD: "$",
@@ -12,14 +16,35 @@ const currencySymbols = {
 };
 
 function JobDetails({ job, onBack }) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [applicationModal, setApplicationModal] = useState(false);
+  const { user_uuid } = useSelector((state) => state.globalState.shared);
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const handleJobApply = async (closeModal) => {
+    try {
+      const jobData = {
+        job_id: job?.id,
+        applicant_id: user_uuid,
+        message: "Empty message!",
+        heard_about_job: "This is a test!",
+        use_existing_resume: true,
+      };
+      const response = await api.post(endpoints.JOB_APPLY, jobData);
+      console.log({ response });
+      showConfirmModal();
+      closeModal();
+    } catch (err) {
+      console.log(err.message);
+      alert(err.message);
+    }
+  };
+
+  const showConfirmModal = () => {
+    setConfirmModal(true);
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+    setConfirmModal(false);
   };
   return (
     <div className="p-8 space-y-4 bg-white rounded-lg shadow-md">
@@ -86,14 +111,14 @@ function JobDetails({ job, onBack }) {
       )} */}
 
       <button
-        onClick={showModal}
+        onClick={() => setApplicationModal(true)}
         className="mt-6 cursor-pointer px-4 py-2 bg-gray-950 text-white rounded hover:bg-gray-600 transition"
       >
         Apply
       </button>
       <Modal
         title="✅ Application Submitted Successfully"
-        open={isModalVisible}
+        open={confirmModal}
         onOk={handleOk}
         okText="OK"
         closable={false}
@@ -101,6 +126,11 @@ function JobDetails({ job, onBack }) {
       >
         <p>You will receive a confirmation email shortly.</p>
       </Modal>
+      <JobApplicationModal
+        open={applicationModal}
+        setOpen={setApplicationModal}
+        func={handleJobApply}
+      />
     </div>
   );
 }
