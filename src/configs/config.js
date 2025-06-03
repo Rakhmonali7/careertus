@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://careertus.com/api/";
+const baseURL = "https://careertus.com/api/";
 
 const api = axios.create({
   baseURL,
