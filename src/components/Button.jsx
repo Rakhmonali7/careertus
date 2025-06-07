@@ -1,24 +1,25 @@
-function Button({ name, onClick, theme }) {
-  const baseClasses =
-    'border h-8 flex items-center justify-center px-4 py-2 rounded-full transition duration-300 cursor-pointer';
+function Button({ name, onClick, border, theme }) {
+  const baseClasses = `
+    border 
+    flex items-center justify-center 
+    rounded-full 
+    transition duration-300 
+    cursor-pointer 
+    px-2 py-1 text-xs
+    sm:px-4 sm:py-2 sm:text-base
+  `;
+  const commonHover = 'hover:text-white';
+
+  let buttonClass = '';
 
   if (theme === 'red') {
-    return (
-      <button
-        onClick={onClick}
-        className={`${baseClasses} bg-[#D65656] text-white border-[#D65656] hover:bg-[#c14444]`}
-      >
-        {name}
-      </button>
-    );
+    buttonClass = `${baseClasses} bg-white hover:bg-[#D65656] ${commonHover}`;
+  } else {
+    buttonClass = `${baseClasses} border-gray-900 text-gray-900 hover:bg-gray-900 ${commonHover}`;
   }
 
-  // Default gray style
   return (
-    <button
-      onClick={onClick}
-      className={`${baseClasses} border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white`}
-    >
+    <button onClick={onClick} className={buttonClass}>
       {name}
     </button>
   );

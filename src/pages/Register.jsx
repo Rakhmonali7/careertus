@@ -1,17 +1,16 @@
-import { useState } from "react";
-import logo from "../assets/reg-logo.svg";
-import { createClient } from "@supabase/supabase-js";
-import { useDispatch } from "react-redux";
+import { useState } from 'react';
+import logo from '../assets/reg-logo.svg';
+import { createClient } from '@supabase/supabase-js';
+import { useDispatch } from 'react-redux';
 import {
   setAuthDataBulk,
   setIsLoggedIn,
   setUserRole,
-} from "../store/reducers/globalReducer";
-import { useNavigate } from "react-router-dom";
-import api from "../configs/config";
-import { endpoints } from "../configs/endpoints";
-import { setAuthData } from "../store/reducers/globalReducer";
-import { pages } from "../configs/pages";
+} from '../store/reducers/globalReducer';
+import { useNavigate } from 'react-router-dom';
+import api from '../configs/config';
+import { endpoints } from '../configs/endpoints';
+import { pages } from '../configs/pages';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -19,15 +18,14 @@ const supabase = createClient(
 );
 
 function Register() {
-  const [emailInput, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [tag, setTag] = useState("");
+  const [emailInput, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [tag, setTag] = useState('');
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
-  const handleUser = (user) => {
+  const handleUser = user => {
     dispatch(setUserRole(user));
     setTag(user);
   };
@@ -36,7 +34,7 @@ function Register() {
     try {
       event.preventDefault();
       if (!tag) {
-        alert("Please select the user type! (Applicant) or (Company)");
+        alert('Please select the user type! (Applicant) or (Company)');
         return;
       }
       const {
@@ -47,8 +45,8 @@ function Register() {
         password,
       });
       const { access_token } = session;
-      localStorage.setItem("token", access_token);
-      api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+      localStorage.setItem('token', access_token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       if (error) {
         alert(error.message);
         console.log(error.message);
@@ -64,13 +62,11 @@ function Register() {
             language,
             users: { account_id, email, name, phone, type },
           },
-          code,
-          message,
         },
       } = await api.post(endpoints.USER_SIGN_IN(tag));
       dispatch(
         setAuthDataBulk({
-          user: "shared",
+          user: 'shared',
           data: {
             user_uuid: user_id,
             accountId: account_id,
@@ -90,13 +86,11 @@ function Register() {
             birthdate,
             language,
             education,
-            // gender,
           },
         })
       );
-      // need to implement company sign-in case
-      dispatch(setIsLoggedIn({ isLoggedIn: true })); // log the user in
-      navigate("/");
+      dispatch(setIsLoggedIn({ isLoggedIn: true }));
+      navigate('/');
     } catch (err) {
       console.log(err.message);
     }
@@ -104,7 +98,7 @@ function Register() {
 
   const handleNavigate = () => {
     if (!tag) {
-      alert("Please select the user type! (Applicant) or (Company)");
+      alert('Please select the user type! (Applicant) or (Company)');
       return;
     }
     navigate(pages.SUPABASE_REGISTER);
@@ -112,41 +106,41 @@ function Register() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4">
-      <div className="w-full max-w-lg sm:max-w-md md:max-w-lg flex flex-col justify-center border rounded-2xl p-6 sm:p-8 md:p-18 bg-white shadow-lg">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="w-full max-w-sm sm:max-w-md md:max-w-lg flex flex-col justify-center border rounded-xl p-4 sm:p-8 md:p-10 bg-white shadow-lg">
+        <div className="mx-auto">
           <img
-            onClick={() => navigate("/")}
+            onClick={() => navigate('/')}
             alt="Company logo"
             src={logo}
-            className="mx-auto h-10 w-auto cursor-pointer"
+            className="mx-auto h-8 sm:h-10 w-auto cursor-pointer"
           />
         </div>
 
-        <div className="flex justify-between mt-6 sm:mt-10 mb-6 sm:mb-8 border-b-2">
+        <div className="flex justify-between mt-5 sm:mt-8 mb-5 sm:mb-8 border-b">
           <h2
-            className={`text-lg sm:text-xl cursor-pointer pb-2 ${
-              tag === "applicant"
-                ? "before:content-['•'] before:mr-2 before:text-black"
-                : "font-light"
+            className={`text-base sm:text-lg cursor-pointer pb-2 ${
+              tag === 'applicant'
+                ? "before:content-['•'] before:mr-1.5 before:text-black"
+                : 'font-light'
             }`}
-            onClick={() => handleUser("applicant")}
+            onClick={() => handleUser('applicant')}
           >
             Applicant
           </h2>
           <h2
-            className={`text-lg sm:text-xl cursor-pointer pb-2 ${
-              tag === "company"
-                ? "before:content-['•'] before:mr-2 before:text-black"
-                : "font-light"
+            className={`text-base sm:text-lg cursor-pointer pb-2 ${
+              tag === 'company'
+                ? "before:content-['•'] before:mr-1.5 before:text-black"
+                : 'font-light'
             }`}
-            onClick={() => handleUser("company")}
+            onClick={() => handleUser('company')}
           >
             Company
           </h2>
         </div>
 
         <div className="mt-2 w-full">
-          <form action="#" method="POST" className="space-y-4 sm:space-y-6">
+          <form action="#" method="POST" className="space-y-3 sm:space-y-5">
             <div>
               <input
                 id="email"
@@ -154,9 +148,9 @@ function Register() {
                 type="email"
                 placeholder="Email"
                 required
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 autoComplete="email"
-                className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm sm:text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600"
               />
             </div>
 
@@ -167,14 +161,14 @@ function Register() {
                 type="password"
                 placeholder="Password"
                 required
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 autoComplete="current-password"
-                className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-md bg-white px-3 py-2 text-sm sm:text-base text-gray-900 border border-gray-300 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-indigo-600"
               />
               <div className="flex justify-end mt-2">
                 <a
                   href="#"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-xs sm:text-sm text-gray-500 hover:text-gray-700"
                 >
                   Forgot password?
                 </a>
@@ -183,7 +177,7 @@ function Register() {
 
             <div>
               <button
-                onClick={(e) => signIn(e)}
+                onClick={e => signIn(e)}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#231815] px-4 py-2 text-white text-sm font-semibold shadow-md hover:bg-[#3D3D3D] focus:ring-2 focus:ring-offset-2 focus:ring-[#3D3D3D] cursor-pointer"
               >
@@ -192,8 +186,8 @@ function Register() {
             </div>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-500">
-            Not a member?{" "}
+          <p className="mt-4 text-center text-xs sm:text-sm text-gray-500">
+            Not a member?{' '}
             <span
               onClick={handleNavigate}
               className="cursor-pointer font-semibold text-gray-600 hover:text-gray-800"

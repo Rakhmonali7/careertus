@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Pencil } from "lucide-react"; // Optional: use any icon library
-import { createClient } from "@supabase/supabase-js";
-import { useDispatch } from "react-redux";
-import { handleLogout, resetAuthData } from "../store/reducers/globalReducer";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { Pencil } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+import { useDispatch } from 'react-redux';
+import { handleLogout, resetAuthData } from '../store/reducers/globalReducer';
+import { useNavigate } from 'react-router-dom';
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -11,45 +11,46 @@ const supabase = createClient(
 );
 
 const initialData = {
-  applicationMethod: "Email",
-  requireResume: "Yes",
-  applicationUpdates: "Yes",
-  contact: "kikimki23",
-  phone: "+82-00-0000-0000",
-  companyName: "",
-  companyIndustry: "",
-  source: "",
+  applicationMethod: 'Email',
+  requireResume: 'Yes',
+  applicationUpdates: 'Yes',
+  contact: 'kikimki23',
+  phone: '+82-00-0000-0000',
+  companyName: '',
+  companyIndustry: '',
+  source: '',
 };
+
 const mockData = [
   {
-    id: "comp123",
-    companyName: "ABC Corp",
-    name: "John Doe",
-    email: "johndoe@gmail.com",
-    phone: "+82-00-0000-0000",
-    resume: "Resume_Link_ABC_Corp.pdf",
+    id: 'comp123',
+    companyName: 'ABC Corp',
+    name: 'John Doe',
+    email: 'johndoe@gmail.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_ABC_Corp.pdf',
   },
   {
-    id: "comp456",
-    companyName: "XYZ Ltd.",
-    name: "Mina Lee",
-    email: "minaleexyz@gmail.com",
-    phone: "+82-00-0000-0000",
-    resume: "Resume_Link_XYZ_Ltd.pdf",
+    id: 'comp456',
+    companyName: 'XYZ Ltd.',
+    name: 'Mina Lee',
+    email: 'minaleexyz@gmail.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_XYZ_Ltd.pdf',
   },
   {
-    id: "comp789",
-    companyName: "Tech Innovations",
-    name: "James Park",
-    email: "jamespark@techinnovations.com",
-    phone: "+82-00-0000-0000",
-    resume: "Resume_Link_Tech_Innovations.pdf",
+    id: 'comp789',
+    companyName: 'Tech Innovations',
+    name: 'James Park',
+    email: 'jamespark@techinnovations.com',
+    phone: '+82-00-0000-0000',
+    resume: 'Resume_Link_Tech_Innovations.pdf',
   },
 ];
 
 const EditableField = ({ label, field, value, onSave }) => {
   const [editing, setEditing] = useState(false);
-  const [tempValue, setTempValue] = useState(value || "");
+  const [tempValue, setTempValue] = useState(value || '');
 
   const save = () => {
     setEditing(false);
@@ -57,26 +58,28 @@ const EditableField = ({ label, field, value, onSave }) => {
   };
 
   return (
-    <div className="flex justify-between items-center py-2">
-      <div className="w-1/2 font-medium text-gray-800">{label}</div>
-      <div className="w-1/2 flex items-center justify-between">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 gap-1">
+      <div className="font-medium text-gray-800 text-sm sm:text-base">
+        {label}
+      </div>
+      <div className="flex items-center justify-between gap-2">
         {editing ? (
           <input
             type="text"
-            className="border border-gray-300 px-2 py-1 rounded w-full text-sm"
+            className="border border-gray-300 px-2 py-1 rounded w-[160px] text-sm"
             value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
+            onChange={e => setTempValue(e.target.value)}
             onBlur={save}
-            onKeyDown={(e) => e.key === "Enter" && save()}
+            onKeyDown={e => e.key === 'Enter' && save()}
             autoFocus
           />
         ) : (
-          <span className="text-gray-700 text-sm">{value || "-"}</span>
+          <span className="text-gray-700 text-sm">{value || '-'}</span>
         )}
         <button
-          className="ml-2 text-gray-500 hover:text-gray-800"
+          className="text-gray-500 hover:text-gray-800"
           onClick={() => {
-            setTempValue(value || "");
+            setTempValue(value || '');
             setEditing(true);
           }}
         >
@@ -96,13 +99,13 @@ export default function JobFinalEdit() {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.log("Logout issue!", error.message);
+        console.log('Logout issue!', error.message);
         return;
       }
       dispatch(handleLogout());
-      dispatch(resetAuthData({ user: "shared" }));
-      dispatch(resetAuthData({ user: "company" }));
-      navigate("/");
+      dispatch(resetAuthData({ user: 'shared' }));
+      dispatch(resetAuthData({ user: 'company' }));
+      navigate('/');
     } catch (err) {
       console.log(err);
     }
@@ -113,8 +116,8 @@ export default function JobFinalEdit() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md mt-14">
-      <h2 className="text-xl font-semibold mb-4">Settings</h2>
+    <div className="max-w-full sm:max-w-3xl mx-auto p-4 sm:p-6 bg-white rounded-md shadow-md mt-10 sm:mt-14">
+      <h2 className="text-lg sm:text-xl font-semibold mb-3">Settings</h2>
 
       <EditableField
         label="Application method"
@@ -135,7 +138,7 @@ export default function JobFinalEdit() {
         onSave={updateField}
       />
 
-      <h2 className="text-xl font-semibold mt-6 mb-4">Account</h2>
+      <h2 className="text-lg sm:text-xl font-semibold mt-6 mb-3">Account</h2>
 
       <EditableField
         label="Contact"
@@ -169,13 +172,13 @@ export default function JobFinalEdit() {
       />
 
       <div className="mt-6">
-        <label className="block font-medium text-gray-700 mb-2">
+        <label className="block font-medium text-gray-700 mb-2 text-sm sm:text-base">
           Applied Positions
         </label>
-        <div className="flex-1 border rounded-lg shadow bg-white overflow-x-auto">
-          <table className="w-full table-auto">
+        <div className="overflow-x-auto border rounded-lg shadow bg-white">
+          <table className="w-full min-w-[600px] table-auto text-sm">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 text-gray-700">
                 <th className="px-4 py-2">Applicant Name</th>
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Phone number</th>
@@ -183,7 +186,7 @@ export default function JobFinalEdit() {
               </tr>
             </thead>
             <tbody>
-              {mockData.map((applicant) => (
+              {mockData.map(applicant => (
                 <tr key={applicant.id} className="text-center">
                   <td className="border px-4 py-2">{applicant.name}</td>
                   <td className="border px-4 py-2">{applicant.email}</td>
@@ -196,14 +199,17 @@ export default function JobFinalEdit() {
         </div>
       </div>
 
-      <div className="flex justify-between mt-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6">
         <button
           onClick={logoutHandler}
-          className="cursor-pointer px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
         >
           Logout
         </button>
-        <button onClick={() => navigate('/')} className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <button
+          onClick={() => navigate('/')}
+          className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+        >
           Main page
         </button>
       </div>
